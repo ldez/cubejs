@@ -36,7 +36,7 @@ Include `solve.js` to solve the cube.
     randomCube.solve();  // => "R B' R U' D' R' ..."
 
 To offload the solving to a web worker, use `async.js` and
-'worker.js'.
+`worker.js`.
 
     Cube.asyncInit('lib/worker.js', function() {
         // Initialized
