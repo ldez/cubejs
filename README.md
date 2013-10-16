@@ -57,5 +57,5 @@ http://www.digip.org/cubejs/demo/.
 License
 -------
 
-cubejs is licensed under the
+cube.js is licensed under the
 [MIT License](http://opensource.org/licenses/MIT).
