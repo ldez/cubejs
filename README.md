@@ -53,9 +53,133 @@ Cube.asyncInit('lib/worker.js', function() {
 A full-fledged random state scrambler demo is available at
 http://www.digip.org/cubejs/demo/.
 
+## API Reference
 
-License
--------
+All functionality is implemented in the `Cube` object. There
+are a bunch of files, of which `cube.js` is always required.
+
+### `cube.js`
+
+`cube.js` gives you basic cube manipulation.
+
+#### Class methods
+
+##### `Cube([state])`
+
+The constructor. Without arguments, constructs an identity cube
+(i.e. a solved cube). With an argument, clones another cube or
+cube state.
+
+```javascript
+var cube = new Cube();
+var other = new Cube(cube);
+var third = new Cube(cube.toJSON());
+```
+
+##### `Cube.random()`
+
+Return a new, randomized cube.
+
+```javascript
+var cube = Cube.random();
+```
+
+##### `Cube.inverse(algoritm)`
+
+Given an algorithm (a string, array of moves, or a single move),
+returns its inverse.
+
+```javascript
+Cube.inverse("F B' R");    // => "R' B F'"
+Cube.inverse([1, 8, 12]);  // => [14, 6, 1]
+Cube.inverse(8);           // => 8
+```
+
+See below for numeric moves.
+
+#### Instance methods
+
+##### `init(state)`
+
+Resets the cube state to match another cube.
+
+```javascript
+var random = Cube.random();
+var cube = new Cube();
+cube.init(random);
+```
+
+##### `identity()`
+
+Resets the cube to the identity cube.
+
+```javascript
+cube.identity();
+cube.isSolved();  // => true
+```
+
+##### `toJSON()`
+
+Returns the cube state as an object.
+
+```javascript
+cube.toJSON();  // => {cp: [...], co: [...], ep: [...], eo: [...]}
+```
+
+##### `clone()`
+
+Returns a fresh clone of the cube.
+
+##### `randomize()`
+
+Randomizes the cube in place.
+
+##### `isSolved()`
+
+Returns `true` if the cube is solved (i.e. the identity cube),
+and `false` otherwise.
+
+##### `move(algorithm)`
+
+Applies an algorithm (a string, array of moves, or a single move)
+to the cube.
+
+```javascript
+var cube = new Cube();
+cube.isSolved();  // => true
+cube.move("U R F'");
+cube.isSolved();  // => false
+```
+
+See below for numeric moves.
+
+#### Numeric moves
+
+Internally, cube.js treats moves as numbers.
+
+<table>
+ <tr><th>Move</th><th>Number</th></tr>
+ <tr><td>U</td><td>0</td></tr>
+ <tr><td>U2</td><td>1</td></tr>
+ <tr><td>U'</td><td>2</td></tr>
+ <tr><td>F</td><td>3</td></tr>
+ <tr><td>F2</td><td>4</td></tr>
+ <tr><td>F'</td><td>5</td></tr>
+ <tr><td>L</td><td>6</td></tr>
+ <tr><td>L2</td><td>7</td></tr>
+ <tr><td>L'</td><td>8</td></tr>
+ <tr><td>D</td><td>9</td></tr>
+ <tr><td>D2</td><td>10</td></tr>
+ <tr><td>D'</td><td>11</td></tr>
+ <tr><td>B</td><td>12</td></tr>
+ <tr><td>B2</td><td>13</td></tr>
+ <tr><td>B'</td><td>14</td></tr>
+ <tr><td>R</td><td>15</td></tr>
+ <tr><td>R2</td><td>16</td></tr>
+ <tr><td>R'</td><td>17</td></tr>
+</table>
+
+## License
 
 cube.js is licensed under the
 [MIT License](http://opensource.org/licenses/MIT).
