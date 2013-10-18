@@ -211,10 +211,8 @@ before calling `solve()`.
 
 ##### `solve([maxDepth])`
 
-Return the algorithm that solves the cube as a string.
-
-`maxDepth` is the maximum number of moves in the solution, and
-defaults to 22.
+Return an algorithm that solves the cube as a string. `maxDepth` is
+the maximum number of moves in the solution, and defaults to 22.
 
 
 ## License
