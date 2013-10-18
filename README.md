@@ -179,6 +179,44 @@ Internally, cube.js treats moves as numbers.
  <tr><td>R'</td><td>17</td></tr>
 </table>
 
+### `solve.js`
+
+`solve.js` implements [Herbert Kociemba's two-phase
+algorithm](http://kociemba.org/cube.htm) for solving the cube quickly
+in nearly optimal number of moves. The algorithm is a port of his
+simple Java implementation without symmetry reductions.
+
+For the algorithm to work, a computationally intensive precalculation
+step is required. Precalculation results in a set of lookup tables
+that guide the heuristic tree search. Precalculation takes 4-5 seconds
+on a typical modern computer, but migh take longer on older machines.
+
+After precalculation is done, solving a cube with at most 22 moves
+typically takes 0.01-0.4 seconds, but may take up to 1.5-2 seconds.
+Again, these figures apply for a modern computer, and might be bigger
+on older machines.
+
+The maximum search depth (numer of moves) can be configured. The
+deeper search is allowed, the quicker the solving is. There's usually
+no reason to change the default of 22 moves.
+
+#### Class methods
+
+##### `Cube.initSolver()`
+
+Perform the precalculation step described above. This must be called
+before calling `solve()`.
+
+#### Instance methods
+
+##### `solve([maxDepth])`
+
+Return the algorithm that solves the cube as a string.
+
+`maxDepth` is the maximum number of moves in the solution, and
+defaults to 22.
+
+
 ## License
 
 cube.js is licensed under the
