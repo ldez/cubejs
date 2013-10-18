@@ -33,7 +33,7 @@ Include `solve.js` to solve the cube.
 // This takes 4-5 seconds on a modern computer
 Cube.initSolver();
 
-// These typically take from 0.01s to 0.2s, sometimes up to 1s
+// These typically take from 0.01s to 0.4s, rarely up to 2s
 cube.solve();        // => "D2 B' R' B L' B ..."
 randomCube.solve();  // => "R B' R U' D' R' ..."
 ```
