@@ -667,3 +667,7 @@ Cube::solve = (maxDepth=22) ->
     solution = solution.substring(0, solution.length - 1)
 
   solution
+
+
+Cube.scramble = ->
+  Cube.inverse(Cube.random().solve())

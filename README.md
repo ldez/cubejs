@@ -207,6 +207,12 @@ no reason to change the default of 22 moves.
 Perform the precalculation step described above. This must be called
 before calling `solve()`.
 
+##### `Cube.scramble()`
+
+Generate a random scramble by taking a random cube state, solving it,
+and returning the inverse of the solving algorithm. By applying this
+algorithm to a cube, you end up to the random state.
+
 #### Instance methods
 
 ##### `solve([maxDepth])`
