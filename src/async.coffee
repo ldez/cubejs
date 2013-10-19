@@ -25,7 +25,7 @@ Extend =
     @_asyncCallback('init', -> callback())
     @_worker.postMessage(cmd: 'init')
 
-  asyncSolve: (cube, callback) ->
+  _asyncSolve: (cube, callback) ->
     @_asyncSetup()
     @_asyncCallback('solve', (data) -> callback(data.algorithm))
     @_worker.postMessage(cmd: 'solve', cube: cube.toJSON())
@@ -36,5 +36,13 @@ Extend =
     @_worker.postMessage(cmd: 'solve', cube: Cube.random().toJSON())
 
 
+Include =
+  asyncSolve: (callback) ->
+    Cube._asyncSolve(this, callback)
+
+
 for key, value of Extend
   Cube[key] = value
+
+for key, value of Include
+  Cube::[key] = value
