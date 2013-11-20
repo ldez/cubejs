@@ -76,6 +76,42 @@ var other = new Cube(cube);
 var third = new Cube(cube.toJSON());
 ```
 
+##### `Cube.fromString(str)`
+
+Returns a cube that represents the given facelet string. The string
+consists of 54 characters, 9 per face:
+
+```javascript
+"UUUUUUUUUR...F...D...L...B..."
+```
+
+U means a facelet of the up face color, R means a facelet of the right
+face color, etc.
+
+The following diagram demonstrates the order of the facelets:
+
+```
+             +------------+
+             | U1  U2  U3 |
+             |            |
+             | U4  U5  U6 |
+             |            |
+             | U7  U8  U9 |
++------------+------------+------------+------------+
+| L1  L2  L3 | F1  F2  F3 | R1  R2  F3 | B1  B2  B3 |
+|            |            |            |            |
+| L4  L5  L6 | F4  F5  F6 | R4  R5  R6 | B4  B5  B6 |
+|            |            |            |            |
+| L7  L8  L9 | F7  F8  F9 | R7  R8  R9 | B7  B8  B9 |
++------------+------------+------------+------------+
+             | D1  D2  D3 |
+             |            |
+             | D4  D5  D6 |
+             |            |
+             | D7  D8  D9 |
+             +------------+
+```
+
 ##### `Cube.random()`
 
 Return a new, randomized cube.
@@ -121,6 +157,10 @@ cube.isSolved();  // => true
 ##### `toJSON()`
 
 Returns the cube state as an object.
+
+##### `asString()`
+
+Returns the cube's state as a facelet string. See `Cube.fromString()`.
 
 ```javascript
 cube.toJSON();  // => {cp: [...], co: [...], ep: [...], eo: [...]}

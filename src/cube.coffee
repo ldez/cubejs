@@ -4,6 +4,39 @@
 # Edges
 [UR, UF, UL, UB, DR, DF, DL, DB, FR, FL, BL, BR] = [0..11]
 
+[cornerFacelet, edgeFacelet] = do ->
+  U = (x) -> x - 1
+  R = (x) -> U(9) + x
+  F = (x) -> R(9) + x
+  D = (x) -> F(9) + x
+  L = (x) -> D(9) + x
+  B = (x) -> L(9) + x
+  [
+    # Corners
+    [
+      [U(9), R(1), F(3)], [U(7), F(1), L(3)],
+      [U(1), L(1), B(3)], [U(3), B(1), R(3)],
+      [D(3), F(9), R(7)], [D(1), L(9), F(7)],
+      [D(7), B(9), L(7)], [D(9), R(9), B(7)],
+    ],
+    # Edges
+    [
+      [U(6), R(2)], [U(8), F(2)], [U(4), L(2)], [U(2), B(2)],
+      [D(6), R(8)], [D(2), F(8)], [D(4), L(8)], [D(8), B(8)],
+      [F(6), R(4)], [F(4), L(6)], [B(6), L(4)], [B(4), R(6)],
+    ],
+  ]
+
+cornerColor = [
+  ['U', 'R', 'F'], ['U', 'F', 'L'], ['U', 'L', 'B'], ['U', 'B', 'R'],
+  ['D', 'F', 'R'], ['D', 'L', 'F'], ['D', 'B', 'L'], ['D', 'R', 'B'],
+]
+
+edgeColor = [
+  ['U', 'R'], ['U', 'F'], ['U', 'L'], ['U', 'B'], ['D', 'R'], ['D', 'F'],
+  ['D', 'L'], ['D', 'B'], ['F', 'R'], ['F', 'L'], ['B', 'L'], ['B', 'R'],
+]
+
 
 class Cube
   constructor: (other) ->
@@ -36,6 +69,56 @@ class Cube
     co: @co
     ep: @ep
     eo: @eo
+
+  asString: ->
+    result = []
+
+    # Initialize centers
+    for [i, c] in [[4, 'U'], [13, 'R'], [22, 'F'], [31, 'D'], [40, 'L'], [49, 'B']]
+      result[i] = c
+
+    for i in [0..7]
+      corner = @cp[i]
+      ori = @co[i]
+      for n in [0..2]
+        result[cornerFacelet[i][(n + ori) % 3]] = cornerColor[corner][n]
+
+    for i in [0..11]
+      edge = @ep[i]
+      ori = @eo[i]
+      for n in [0..1]
+        result[edgeFacelet[i][(n + ori) % 2]] = edgeColor[edge][n]
+
+    result.join('')
+
+  @fromString: (str) ->
+    cube = new Cube
+
+    for i in [0..7]
+      for ori in [0..2]
+        break if str[cornerFacelet[i][ori]] in ['U', 'D']
+      col1 = str[cornerFacelet[i][(ori + 1) % 3]]
+      col2 = str[cornerFacelet[i][(ori + 2) % 3]]
+
+      for j in [0..7]
+        if col1 == cornerColor[j][1] and col2 == cornerColor[j][2]
+          cube.cp[i] = j
+          cube.co[i] = ori % 3
+
+    for i in [0..11]
+      for j in [0..11]
+        if (str[edgeFacelet[i][0]] == edgeColor[j][0] and
+            str[edgeFacelet[i][1]] == edgeColor[j][1])
+          cube.ep[i] = j
+          cube.eo[i] = 0
+          break
+        if (str[edgeFacelet[i][0]] == edgeColor[j][1] and
+            str[edgeFacelet[i][1]] == edgeColor[j][0])
+          cube.ep[i] = j
+          cube.eo[i] = 1
+          break
+
+    cube
 
   clone: ->
     new Cube(@toJSON())
