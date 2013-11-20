@@ -158,13 +158,13 @@ cube.isSolved();  // => true
 
 Returns the cube state as an object.
 
-##### `asString()`
-
-Returns the cube's state as a facelet string. See `Cube.fromString()`.
-
 ```javascript
 cube.toJSON();  // => {cp: [...], co: [...], ep: [...], eo: [...]}
 ```
+
+##### `asString()`
+
+Returns the cube's state as a facelet string. See `Cube.fromString()`.
 
 ##### `clone()`
 
