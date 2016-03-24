@@ -477,7 +477,7 @@ Cube.initSolver = ->
 Cube::solve = (maxDepth=22) ->
   # Names for all moves, i.e. U, U2, U', F, F2, ...
   moveNames = do ->
-    faceName = ['U', 'F', 'L', 'D', 'B', 'R']
+    faceName = ['U', 'R', 'F', 'D', 'L', 'B']
     powerName = ['', '2', "'"]
 
     result = []
