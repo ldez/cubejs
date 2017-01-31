@@ -197,27 +197,27 @@ See below for numeric moves.
 
 Internally, cube.js treats moves as numbers.
 
-<table>
- <tr><th>Move</th><th>Number</th></tr>
- <tr><td>U</td><td>0</td></tr>
- <tr><td>U2</td><td>1</td></tr>
- <tr><td>U'</td><td>2</td></tr>
- <tr><td>F</td><td>3</td></tr>
- <tr><td>F2</td><td>4</td></tr>
- <tr><td>F'</td><td>5</td></tr>
- <tr><td>L</td><td>6</td></tr>
- <tr><td>L2</td><td>7</td></tr>
- <tr><td>L'</td><td>8</td></tr>
- <tr><td>D</td><td>9</td></tr>
- <tr><td>D2</td><td>10</td></tr>
- <tr><td>D'</td><td>11</td></tr>
- <tr><td>B</td><td>12</td></tr>
- <tr><td>B2</td><td>13</td></tr>
- <tr><td>B'</td><td>14</td></tr>
- <tr><td>R</td><td>15</td></tr>
- <tr><td>R2</td><td>16</td></tr>
- <tr><td>R'</td><td>17</td></tr>
-</table>
+
+| Move | Number |
+|------|--------|
+| U    | 0      |
+| U2   | 1      |
+| U'   | 2      |
+| F    | 3      |
+| F2   | 4      |
+| F'   | 5      |
+| L    | 6      |
+| L2   | 7      |
+| L'   | 8      |
+| D    | 9      |
+| D2   | 10     |
+| D'   | 11     |
+| B    | 12     |
+| B2   | 13     |
+| B'   | 14     |
+| R    | 15     |
+| R2   | 16     |
+| R'   | 17     |
 
 ### `solve.js`
 
