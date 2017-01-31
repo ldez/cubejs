@@ -19,7 +19,7 @@ Cnk = (n, k) ->
   s = 1
   i = n
   j = 1
-  while i != n - k
+  while i isnt n - k
     s *= i
     s /= j
     i--
@@ -64,7 +64,7 @@ permutationIndex = (context, start, end, fromEnd=false) ->
   maxOur = end - start
   maxB = factorial(maxOur + 1)
 
-  if context == 'corners'
+  if context is 'corners'
     maxAll = 7
     permName = 'cp'
   else
@@ -136,7 +136,7 @@ permutationIndex = (context, start, end, fromEnd=false) ->
       # Compute the index b < (maxOur + 1)! for the permutation
       for j in [maxOur..0]
         k = 0
-        while our[j] != start + j
+        while our[j] isnt start + j
           rotateLeft(our, 0, j)
           k++
         b = (j + 1) * b + k
@@ -159,7 +159,7 @@ Include =
         parity += ori
 
       @co[7] = ((3 - parity % 3) % 3)
-      @
+      this
 
     else
       v = 0
@@ -180,7 +180,7 @@ Include =
         parity += ori
 
       @eo[11] = ((2 - parity % 2) % 2)
-      @
+      this
 
     else
       v = 0
@@ -231,7 +231,7 @@ computeMoveTable = (context, coord, size) ->
   # Loop through all valid values for the coordinate, setting cube's
   # state in each iteration. Then apply each of the 18 moves to the
   # cube, and compute the resulting coordinate.
-  apply = if context == 'corners' then 'cornerMultiply' else 'edgeMultiply'
+  apply = if context is 'corners' then 'cornerMultiply' else 'edgeMultiply'
 
   cube = new Cube
 
@@ -260,8 +260,8 @@ mergeURtoDF = do ->
     b.UBtoDF(UBtoDF)
 
     for i in [0..7]
-      if a.ep[i] != -1
-        if b.ep[i] != -1
+      if a.ep[i] isnt -1
+        if b.ep[i] isnt -1
           return -1  # collision
         else
           b.ep[i] = a.ep[i]
@@ -329,7 +329,7 @@ Cube.computeMoveTables = (tables...) ->
       [scope, size] = moveTableParams[tableName]
       @moveTables[tableName] = computeMoveTable(scope, tableName, size)
 
-  @
+  this
 
 
 # Phase 1: All moves are valid
@@ -343,7 +343,7 @@ nextMoves1 = do ->
     # Don't allow commuting moves, e.g. U U'. Also make sure that
     # opposite faces are always moved in the same order, i.e. allow
     # U D but no D U. This avoids sequences like U D U'.
-    for face in [0..5] when face != lastFace and face != lastFace - 3
+    for face in [0..5] when face isnt lastFace and face isnt lastFace - 3
       for power in [0..2]  # single, double or inverse move
         next.push(face * 3 + power)
     next
@@ -354,7 +354,7 @@ allMoves2 = [0, 1, 2, 4, 7, 9, 10, 11, 13, 16]
 nextMoves2 = do ->
   for lastFace in [0..5]
     next = []
-    for face in [0..5] when face != lastFace and face != lastFace - 3
+    for face in [0..5] when face isnt lastFace and face isnt lastFace - 3
       # Allow all moves of U and D and double moves of others
       powers = if face in [0, 3] then [0..2] else [1]
       for power in powers
@@ -380,7 +380,7 @@ computePruningTable = (phase, size, currentCoords, nextIndex) ->
   # Initialize all values to 0xF
   table = (0xFFFFFFFF for x in [0..Math.ceil(size / 8) - 1])
 
-  if phase == 1
+  if phase is 1
     moves = allMoves1
   else
     moves = allMoves2
@@ -392,12 +392,12 @@ computePruningTable = (phase, size, currentCoords, nextIndex) ->
   # In each iteration, take each state found in the previous depth and
   # compute the next state. Stop when all states have been assigned a
   # depth.
-  while done != size
-    for index in [0..size - 1] when pruning(table, index) == depth
+  while done isnt size
+    for index in [0..size - 1] when pruning(table, index) is depth
       current = currentCoords(index)
       for move in moves
         next = nextIndex(current, move)
-        if pruning(table, next) == 0xF
+        if pruning(table, next) is 0xF
           pruning(table, next, depth + 1)
           done++
     depth++
@@ -468,7 +468,7 @@ Cube.computePruningTables = (tables...) ->
     params = pruningTableParams[tableName]
     @pruningTables[tableName] = computePruningTable(params...)
 
-  @
+  this
 
 Cube.initSolver = ->
   Cube.computeMoveTables()
@@ -530,7 +530,7 @@ Cube::solve = (maxDepth=22) ->
 
     # Return the next valid phase 1 moves for this state
     moves1: ->
-      if @lastMove != null then nextMoves1[@lastMove / 3 | 0] else allMoves1
+      if @lastMove isnt null then nextMoves1[@lastMove / 3 | 0] else allMoves1
 
     # Compute the minimum number of moves to the end of phase 1
     minDist1: ->
@@ -547,7 +547,7 @@ Cube::solve = (maxDepth=22) ->
     # Compute the next phase 1 state for the given move
     next1: (move) ->
       next = freeStates.pop()
-      next.parent = @
+      next.parent = this
       next.lastMove = move
       next.depth = @depth + 1
 
@@ -562,7 +562,7 @@ Cube::solve = (maxDepth=22) ->
 
     # Return the next valid phase 2 moves for this state
     moves2: ->
-      if @lastMove != null then nextMoves2[@lastMove / 3 | 0] else allMoves2
+      if @lastMove isnt null then nextMoves2[@lastMove / 3 | 0] else allMoves2
 
     # Compute the minimum number of moves to the solved cube
     minDist2: ->
@@ -598,7 +598,7 @@ Cube::solve = (maxDepth=22) ->
     # Compute the next phase 2 state for the given move
     next2: (move) ->
       next = freeStates.pop()
-      next.parent = @
+      next.parent = this
       next.lastMove = move
       next.depth = @depth + 1
 
