@@ -22,9 +22,9 @@
     "url": "git+https://github.com/ldez/cubejs.git"
   },
   "keywords": [
-    "rubik's",
-    "cube",
-    "modeling",
+    "rubik's cube",
+    "3x3",
+    "scrambler",
     "solver"
   ],
   "main": "/lib/cube.js",
