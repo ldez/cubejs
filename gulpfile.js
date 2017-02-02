@@ -9,7 +9,7 @@ const karma = require('karma');
 const paths = {
   src: 'src',
   dist: 'lib',
-  demo: 'doc'
+  demo: 'docs'
 };
 
 function clean() {
