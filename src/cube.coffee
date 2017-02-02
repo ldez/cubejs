@@ -101,19 +101,19 @@ class Cube
       col2 = str[cornerFacelet[i][(ori + 2) % 3]]
 
       for j in [0..7]
-        if col1 == cornerColor[j][1] and col2 == cornerColor[j][2]
+        if col1 is cornerColor[j][1] and col2 is cornerColor[j][2]
           cube.cp[i] = j
           cube.co[i] = ori % 3
 
     for i in [0..11]
       for j in [0..11]
-        if (str[edgeFacelet[i][0]] == edgeColor[j][0] and
-            str[edgeFacelet[i][1]] == edgeColor[j][1])
+        if (str[edgeFacelet[i][0]] is edgeColor[j][0] and
+            str[edgeFacelet[i][1]] is edgeColor[j][1])
           cube.ep[i] = j
           cube.eo[i] = 0
           break
-        if (str[edgeFacelet[i][0]] == edgeColor[j][1] and
-            str[edgeFacelet[i][1]] == edgeColor[j][0])
+        if (str[edgeFacelet[i][0]] is edgeColor[j][1] and
+            str[edgeFacelet[i][1]] is edgeColor[j][0])
           cube.ep[i] = j
           cube.eo[i] = 1
           break
@@ -133,14 +133,14 @@ class Cube
         r = randint(i, max)
 
         # Ensure an even number of swaps
-        if i != r
+        if i isnt r
           [arr[i], arr[r]] = [arr[r], arr[i]]
           [arr[max], arr[max - 1]] = [arr[max - 1], arr[max]]
 
     randOri = (arr, max) ->
       ori = 0
       for i in [0..arr.length - 2]
-          ori += (arr[i] = randint(0, max - 1))
+        ori += (arr[i] = randint(0, max - 1))
 
       # Set the orientation of the last cubie so that the cube is
       # valid
@@ -161,12 +161,12 @@ class Cube
 
   isSolved: ->
     for c in [0..7]
-      return false if @cp[c] != c
-      return false if @co[c] != 0
+      return false if @cp[c] isnt c
+      return false if @co[c] isnt 0
 
     for e in [0..11]
-      return false if @ep[e] != e
-      return false if @eo[e] != 0
+      return false if @ep[e] isnt e
+      return false if @eo[e] isnt 0
 
     true
 
@@ -179,7 +179,7 @@ class Cube
 
     [@cp, @newCp] = [@newCp, @cp]
     [@co, @newCo] = [@newCo, @co]
-    @
+    this
 
   # Multiply this Cube with another Cube, restricted to edges
   edgeMultiply: (other) ->
@@ -190,13 +190,13 @@ class Cube
 
     [@ep, @newEp] = [@newEp, @ep]
     [@eo, @newEo] = [@newEo, @eo]
-    @
+    this
 
   # Multiply this cube with another Cube
   multiply: (other) ->
     @cornerMultiply(other)
     @edgeMultiply(other)
-    @
+    this
 
   @moves: [
     # U
@@ -273,21 +273,21 @@ class Cube
           continue
 
         if part.length > 2
-          throw 'Invalid move: ' + part
+          throw new Error 'Invalid move: ' + part
 
         move = faceNums[part[0]]
         if move is undefined
-          throw 'Invalid move: ' + part
+          throw new Error 'Invalid move: ' + part
 
-        if part.length == 1
+        if part.length is 1
           power = 0
         else
-          if part[1] == '2'
+          if part[1] is '2'
             power = 1
-          else if part[1] == "'"
+          else if part[1] is "'"
             power = 2
           else
-            throw 'Invalid move: ' + part
+            throw new Error 'Invalid move: ' + part
 
         move * 3 + power
 
@@ -321,9 +321,9 @@ class Cube
         face = move / 3 | 0
         power = move % 3
         str += faceNames[face]
-        if power == 1
+        if power is 1
           str += '2'
-        else if power == 2
+        else if power is 2
           str += "'"
         str += ' '
       str.substring(0, str.length - 1)
