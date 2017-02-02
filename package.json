@@ -1,6 +1,6 @@
 {
   "name": "cubejs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "JavaScript library for modeling and solving the 3x3x3 Rubik's Cube",
   "author": {
     "name": "akheron",
