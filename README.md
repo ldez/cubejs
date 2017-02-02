@@ -1,11 +1,13 @@
 # cube.js
 
-cube.js is a JavaScript library for modeling and solving the 3x3x3 Rubik's Cube.
+[![Build Status](https://travis-ci.org/ldez/cubejs.svg?branch=master)](https://travis-ci.org/ldez/cubejs)
+
+**cube.js** is a JavaScript library for modeling and solving the 3x3x3 Rubik's Cube.
 
 Most notably, it implements [Herbert Kociemba's two-phase algorithm](http://kociemba.org/cube.htm) for solving any state of the
 cube very fast in 22 moves or less.
 
-cube.js is written in [CoffeeScript](http://coffeescript.org/), and runs on [node.js](http://nodejs.org/) and modern browsers.
+**cube.js** is written in [CoffeeScript](http://coffeescript.org/), and runs on [node.js](http://nodejs.org/) and modern browsers.
 
 A full-fledged random state scrambler demo is available [here](http://ldez.github.io/cubejs/).
 
@@ -79,7 +81,7 @@ The string consists of 54 characters, 9 per face:
 "UUUUUUUUUR...F...D...L...B..."
 ```
 
-U means a facelet of the up face color, R means a facelet of the right face color, etc.
+`U` means a facelet of the up face color, `R` means a facelet of the right face color, etc.
 
 The following diagram demonstrates the order of the facelets:
 
@@ -247,9 +249,9 @@ the maximum number of moves in the solution, and defaults to 22.
 
 ## License
 
-cube.js is licensed under the [MIT License](http://opensource.org/licenses/MIT).
+**cube.js** is licensed under the [MIT License](http://opensource.org/licenses/MIT).
 
 ## History
 
-cube.js was created by [Petri Lehtinen](http://www.digip.org/about/) aka [akheron](https://github.com/akheron).
+**cube.js** was created by [Petri Lehtinen](http://www.digip.org/about/) aka [akheron](https://github.com/akheron).
 Thanks to him.
