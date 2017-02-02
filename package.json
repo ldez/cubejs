@@ -2,15 +2,22 @@
   "name": "cubejs",
   "version": "1.0.0",
   "description": "JavaScript library for modeling and solving the 3x3x3 Rubik's Cube",
-  "author": "akheron",
+  "author": {
+    "name": "akheron",
+    "url": "http://www.digip.org/about/"
+  },
+  "maintainers": [{
+    "name": "ldez",
+    "url": "https://twitter.com/ludnadez"
+  }],
   "license": "MIT",
-  "homepage": "https://github.com/akheron/cubejs#readme",
+  "homepage": "https://github.com/ldez/cubejs#readme",
   "bugs": {
-    "url": "https://github.com/akheron/cubejs/issues"
+    "url": "https://github.com/v/cubejs/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/akheron/cubejs.git"
+    "url": "git+https://github.com/ldez/cubejs.git"
   },
   "keywords": [
     "rubik's",

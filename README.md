@@ -7,7 +7,7 @@ cube very fast in 22 moves or less.
 
 cube.js is written in [CoffeeScript](http://coffeescript.org/), and runs on [node.js](http://nodejs.org/) and modern browsers.
 
-A full-fledged random state scrambler demo is available at [demo](http://ldez.github.io/cubejs/).
+A full-fledged random state scrambler demo is available [here](http://ldez.github.io/cubejs/).
 
 ## Examples
 
@@ -247,7 +247,9 @@ the maximum number of moves in the solution, and defaults to 22.
 
 ## License
 
+cube.js is licensed under the [MIT License](http://opensource.org/licenses/MIT).
+
+## History
+
 cube.js was created by [Petri Lehtinen](http://www.digip.org/about/) aka [akheron](https://github.com/akheron).
 Thanks to him.
-
-cube.js is licensed under the [MIT License](http://opensource.org/licenses/MIT).
