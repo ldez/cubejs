@@ -50,8 +50,7 @@ Cube.asyncInit('lib/worker.js', function() {
 });
 ```
 
-A full-fledged random state scrambler demo is available at
-http://www.digip.org/cubejs/demo/.
+A full-fledged random state scrambler demo is available at [demo](http://ldez.github.io/cubejs/).
 
 ## API Reference
 
@@ -78,8 +77,8 @@ var third = new Cube(cube.toJSON());
 
 ##### `Cube.fromString(str)`
 
-Returns a cube that represents the given facelet string. The string
-consists of 54 characters, 9 per face:
+Returns a cube that represents the given facelet string.
+The string consists of 54 characters, 9 per face:
 
 ```javascript
 "UUUUUUUUUR...F...D...L...B..."
@@ -221,10 +220,9 @@ Internally, cube.js treats moves as numbers.
 
 ### `solve.js`
 
-`solve.js` implements [Herbert Kociemba's two-phase
-algorithm](http://kociemba.org/cube.htm) for solving the cube quickly
-in nearly optimal number of moves. The algorithm is a port of his
-simple Java implementation without symmetry reductions.
+`solve.js` implements [Herbert Kociemba's two-phase algorithm](http://kociemba.org/cube.htm)
+for solving the cube quickly in nearly optimal number of moves.
+The algorithm is a port of his simple Java implementation without symmetry reductions.
 
 For the algorithm to work, a computationally intensive precalculation
 step is required. Precalculation results in a set of lookup tables
@@ -263,7 +261,8 @@ the maximum number of moves in the solution, and defaults to 22.
 
 ## License
 
-cube.js creator is [akheron](https://github.com/akheron)
+cube.js was created by [Petri Lehtinen](http://www.digip.org/about/) aka [akheron](https://github.com/akheron).
+Thanks to him.
 
 cube.js is licensed under the
 [MIT License](http://opensource.org/licenses/MIT).

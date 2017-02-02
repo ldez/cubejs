@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Petri Lehtinen">
+  <title>CubeJS Demo</title>
+  <meta name="description" content="CubeJS : Rubik's cube solver and scrambler">
+
+  <link rel="stylesheet" href="./css/html5reset-1.6.css">
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/pygments.css">
+  <style>
+    #randomstate {
+      visibility: hidden;
+      height: 250px;
+    }
+
+    .pygments {
+      margin-left: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container">
+
+    <h1>cube.js random-state scrambler demo</h1>
+    <p>
+      This is a simple random state scrambler created with cube.js. After the initialization is complete, click on the "generate random scramble" button to generate a random-state scramble.
+    </p>
+    <p>
+      Graphics are generated using Conrad Rider's <a href="http://cube.crider.co.uk/visualcube.php">VisualCube</a>.
+    </p>
+    <p>
+      The demo scrambler and its code are presented below. Click <a href="demo.html">here</a> for a standalone page.
+    </p>
+
+    <h2>The scrambler</h2>
+    <p id="status"></p>
+    <p id="randomstate">
+      <button>Generate random scramble</button><br>
+      <span class="result"></span>
+    </p>
+
+    <h2>The code</h2>
+    <p>
+      demo.html:
+    </p>
+    <div class="pygments">
+      <pre>
+        <span class="cp">&lt;!DOCTYPE html&gt;</span>
+        <span class="nt">&lt;head&gt;</span>
+          <span class="nt">&lt;style&gt;</span>
+            <span class="nf">#randomstate</span> <span class="p">{</span> <span class="k">visibility</span><span class="o">:</span> <span class="k">hidden</span><span class="p">;</span> <span class="p">}</span>
+          <span class="nt">&lt;/style&gt;</span>
+        <span class="nt">&lt;/head&gt;</span>
+
+        <span class="nt">&lt;body&gt;</span>
+          <span class="nt">&lt;p</span> <span class="na">id=</span><span class="s">&quot;status&quot;</span><span class="nt">&gt;&lt;/p&gt;</span>
+          <span class="nt">&lt;p</span> <span class="na">id=</span><span class="s">&quot;randomstate&quot;</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;button&gt;</span>Generate random scramble<span class="nt">&lt;/button&gt;&lt;br&gt;</span>
+            <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;result&quot;</span><span class="nt">&gt;&lt;/span&gt;</span>
+          <span class="nt">&lt;/p&gt;</span>
+
+          <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;//code.jquery.com/jquery-1.10.2.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+          <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;/cubejs/lib/cube.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+          <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;/cubejs/lib/async.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+          <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;demo.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+        <span class="nt">&lt;/body&gt;</span>
+      </pre>
+    </div>
+    <p>
+      demo.js:
+    </p>
+    <div class="pygments">
+      <pre>
+        <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">start</span><span class="p">,</span> <span class="nx">progressHandle</span><span class="p">;</span>
+
+        <span class="kd">var</span> <span class="nx">progress</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="c1">// Add a dot each second</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#status&#39;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">text</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">text</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span><span class="p">;</span> <span class="p">});</span>
+        <span class="p">};</span>
+
+        <span class="kd">var</span> <span class="nx">initialized</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="c1">// Precomputing finished, stop adding dots</span>
+            <span class="nx">clearInterval</span><span class="p">(</span><span class="nx">progressHandle</span><span class="p">);</span>
+
+            <span class="c1">// Show the duration of initialization</span>
+            <span class="kd">var</span> <span class="nx">end</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">,</span>
+                <span class="nx">duration</span> <span class="o">=</span> <span class="p">(</span><span class="nx">end</span> <span class="o">-</span> <span class="nx">start</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">;</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#status&#39;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s1">&#39;Initialization done in &#39;</span> <span class="o">+</span> <span class="nx">duration</span> <span class="o">+</span> <span class="s1">&#39; seconds.&#39;</span><span class="p">);</span>
+
+            <span class="c1">// Show the scrambler</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#randomstate&#39;</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;visibility&#39;</span><span class="p">,</span> <span class="s1">&#39;visible&#39;</span><span class="p">);</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#randomstate button&#39;</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="nx">generateScramble</span><span class="p">);</span>
+        <span class="p">};</span>
+
+        <span class="kd">var</span> <span class="nx">generateScramble</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="c1">// Hide the initialization status on first scramble</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#status&#39;</span><span class="p">).</span><span class="nx">hide</span><span class="p">();</span>
+
+            <span class="c1">// Generate a scramble</span>
+            <span class="nx">Cube</span><span class="p">.</span><span class="nx">asyncScramble</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">alg</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="nx">alg</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\s+/g</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>  <span class="c1">// remove spaces</span>
+                    <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;http://cube.crider.co.uk/visualcube.png?size=150&amp;alg=&quot;</span> <span class="o">+</span> <span class="nx">s</span><span class="p">;</span>
+                <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#randomstate .result&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">alg</span> <span class="o">+</span> <span class="s2">&quot;&lt;br&gt;&lt;img src=\&quot;&quot;</span> <span class="o">+</span> <span class="nx">url</span> <span class="o">+</span> <span class="s2">&quot;\&quot;&gt;&quot;</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="p">};</span>
+
+        <span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#status&#39;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="s1">&#39;Initializing&#39;</span><span class="p">);</span>
+
+            <span class="c1">// Start measuring time</span>
+            <span class="nx">start</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">;</span>
+
+            <span class="c1">// Start adding dots</span>
+            <span class="nx">progressHandle</span> <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(</span><span class="nx">progress</span><span class="p">,</span> <span class="mi">1000</span><span class="p">);</span>
+
+            <span class="c1">// Start precomputing</span>
+            <span class="nx">Cube</span><span class="p">.</span><span class="nx">asyncInit</span><span class="p">(</span><span class="s1">&#39;/cubejs/lib/worker.js&#39;</span><span class="p">,</span> <span class="nx">initialized</span><span class="p">);</span>
+        <span class="p">});</span>
+        <span class="p">})();</span>
+      </pre>
+    </div>
+
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+  <script src="./lib/cube.js" type="text/javascript"></script>
+  <script src="./lib/async.js" type="text/javascript"></script>
+  <script src="./demo.js" defer></script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+@import url(http://fonts.googleapis.com/css?family=Lora:400,700);
+
+body {
+    font-family: 'Lora', 'Georgia', serif;
+    font-size: 17px;
+    line-height: 150%;
+    color: #333;
+}
+
+#container {
+    margin: 0 auto;
+    padding: 20px;
+    max-width: 760px;
+    background-color: #fff;
+}
+
+h1 { font-size: 28px; padding-bottom: 4px; }
+h2 { font-size: 21px; }
+h3 { font-size: 17px; }
+
+h1, h2, h3 {
+    margin-bottom: 14px;
+    border-bottom: 1px dashed #ddd;
+}
+
+a {
+    color: #446;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+p, dl {
+    margin-bottom: 13px;
+}
+
+blockquote {
+    margin: 13px 26px;
+}
+
+ul {
+    margin: 0 0 13px 40px;
+    list-style-type: square;
+}
+
+code, pre {
+    font-family: 'Consolas', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+}
+
+pre {
+    line-height: 130%;
+}
+
+.pygments, pre.plain {
+    margin: 13px 25px;
+    padding: 5px;
+    border: 1px solid #ddd;
+}
+
+.clear {
+    clear: both;
+}
+
+table {
+    margin: 13px 25px;
+    border: 1px solid #ddd;
+}
+
+table th, table td {
+    padding: 2px 8px;
+    text-align: left;
+}
+
+dt {
+    font-weight: bold;
+}
+
+dd {
+    margin-left: 26px;
+    margin-bottom: 8px;
+}

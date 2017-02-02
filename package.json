@@ -23,6 +23,7 @@
     "build": "gulp",
     "test": "gulp test",
     "test:auto": "gulp test:auto",
+    "demo:build": "gulp demo:build",
     "prepublish": "gulp build"
   },
   "devDependencies": {
