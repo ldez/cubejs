@@ -16,14 +16,18 @@ function clean() {
   return del([`./${paths.dist}`]);
 }
 
-function build() {
+function buildCoffee(dest) {
   gulp.src(`./${paths.src}/*.coffee`)
     .pipe(coffeelint())
     .pipe(coffeelint.reporter())
     .pipe(coffee({
       bare: false
     }).on('error', gutil.log))
-    .pipe(gulp.dest(`./${paths.dist}/`));
+    .pipe(gulp.dest(dest));
+}
+
+function build() {
+  buildCoffee(`./${paths.dist}/`);
 }
 
 function runTests(singleRun, done) {
@@ -40,13 +44,12 @@ function runTests(singleRun, done) {
   server.start();
 }
 
-function demo() {
-  gulp.src(`./${paths.dist}/*.js`)
-    .pipe(gulp.dest(`./${paths.demo}/lib/`));
-}
-
 function cleanDemo() {
   return del([`./${paths.demo}/lib`]);
+}
+
+function demo() {
+  buildCoffee(`./${paths.demo}/lib/`);
 }
 
 gulp.task('test', function(done) {
