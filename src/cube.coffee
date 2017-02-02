@@ -37,11 +37,10 @@ edgeColor = [
   ['D', 'L'], ['D', 'B'], ['F', 'R'], ['F', 'L'], ['B', 'L'], ['B', 'R'],
 ]
 
-
 class Cube
   constructor: (other) ->
     if other?
-      @init(other)
+      @init other
     else
       @identity()
 
@@ -52,10 +51,10 @@ class Cube
     @newEo = (0 for x in [0..11])
 
   init: (state) ->
-    @cp = state.cp.slice(0)
-    @co = state.co.slice(0)
-    @ep = state.ep.slice(0)
-    @eo = state.eo.slice(0)
+    @co = state.co.slice 0
+    @ep = state.ep.slice 0
+    @cp = state.cp.slice 0
+    @eo = state.eo.slice 0
 
   identity: ->
     # Initialize to the identity cube
@@ -121,7 +120,7 @@ class Cube
     cube
 
   clone: ->
-    new Cube(@toJSON())
+    new Cube @toJSON()
 
   randomize: do ->
     randint = (min, max) ->
@@ -157,7 +156,7 @@ class Cube
 
   # A class method returning a new random cube
   @random: ->
-    (new Cube).randomize()
+    new Cube().randomize()
 
   isSolved: ->
     for c in [0..7]
@@ -273,11 +272,11 @@ class Cube
           continue
 
         if part.length > 2
-          throw new Error 'Invalid move: ' + part
+          throw new Error "Invalid move: #{part}"
 
         move = faceNums[part[0]]
         if move is undefined
-          throw new Error 'Invalid move: ' + part
+          throw new Error "Invalid move: #{part}"
 
         if part.length is 1
           power = 0
@@ -287,7 +286,7 @@ class Cube
           else if part[1] is "'"
             power = 2
           else
-            throw new Error 'Invalid move: ' + part
+            throw new Error "Invalid move: #{part}"
 
         move * 3 + power
 
