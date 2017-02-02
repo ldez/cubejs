@@ -17,7 +17,7 @@
     // Show the duration of initialization
     let end = new Date;
     let duration = (end - start) / 1000;
-    $('#status').text('Initialization done in ' + duration + ' seconds.');
+    $('#status').text(`Initialization done in  ${duration} seconds.`);
 
     // Show the scrambler
     $('#randomstate').css('visibility', 'visible');
