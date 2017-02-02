@@ -263,5 +263,7 @@ the maximum number of moves in the solution, and defaults to 22.
 
 ## License
 
+cube.js creator is [akheron](https://github.com/akheron)
+
 cube.js is licensed under the
 [MIT License](http://opensource.org/licenses/MIT).
