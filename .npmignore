@@ -19,7 +19,7 @@ node_modules
 
 docs
 gulpfile.js
-coffeelin.json
+coffeelint.json
 .travis.yml
 .gitignore
 .editorconfig

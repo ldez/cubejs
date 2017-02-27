@@ -40,7 +40,7 @@ function runTests(singleRun, done) {
 
   const server = new karma.Server(localConfig, function(failCount) {
     done(failCount ? new Error(`Failed ${failCount} tests.`) : null);
-  })
+  });
   server.start();
 }
 
