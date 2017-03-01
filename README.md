@@ -1,7 +1,7 @@
 # cube.js
 
 [![Build Status](https://travis-ci.org/ldez/cubejs.svg?branch=master)](https://travis-ci.org/ldez/cubejs)
-[![npm version](https://badge.fury.io/js/cubejs.svg)](https://badge.fury.io/js/cubejs)
+[![npm version](https://badge.fury.io/js/cubejs.svg)](https://www.npmjs.com/package/cubejs)
 
 **cube.js** is a JavaScript library for modeling and solving the 3x3x3 Rubik's Cube.
 
