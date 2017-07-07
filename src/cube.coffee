@@ -37,6 +37,84 @@ edgeColor = [
   ['D', 'L'], ['D', 'B'], ['F', 'R'], ['F', 'L'], ['B', 'L'], ['B', 'R'],
 ]
 
+faceNums =
+  U: 0
+  R: 1
+  F: 2
+  D: 3
+  L: 4
+  B: 5
+
+faceNames =
+  0: 'U'
+  1: 'R'
+  2: 'F'
+  3: 'D'
+  4: 'L'
+  5: 'B'
+
+class RotationCube
+  constructor: ->
+    @frontFace = faceNums.F
+    @northFace = faceNums.U
+    @southFace = faceNums.D
+    @eastFace = faceNums.R
+    @westFace = faceNums.L
+    @backFace = faceNums.B
+
+  z: ->
+    pastTopFace = @northFace
+    @northFace = @westFace
+    @westFace = @southFace
+    @southFace = @eastFace
+    @eastFace = pastTopFace
+
+  zPrime: ->
+    pastTopFace = @northFace
+    @northFace = @eastFace
+    @eastFace = @southFace
+    @southFace = @westFace
+    @westFace = pastTopFace
+
+  y: ->
+    pastFrontFace = @frontFace
+    @frontFace = @eastFace
+    @eastFace = @backFace
+    @backFace = @westFace
+    @westFace = pastFrontFace
+
+  yPrime: ->
+    pastFrontFace = @frontFace
+    @frontFace = @westFace
+    @westFace = @backFace
+    @backFace = @eastFace
+    @eastFace = pastFrontFace
+
+  xPrime: ->
+    pastFrontFace = @frontFace
+    @frontFace = @northFace
+    @northFace = @backFace
+    @backFace = @southFace
+    @southFace = pastFrontFace
+
+  x: ->
+    pastFrontFace = @frontFace
+    @frontFace = @southFace
+    @southFace = @backFace
+    @backFace = @northFace
+    @northFace = pastFrontFace
+
+  translateMove: (moveString) ->
+    translateEnum =
+        U: faceNames[@northFace]
+        R: faceNames[@eastFace]
+        F: faceNames[@frontFace]
+        D: faceNames[@southFace]
+        L: faceNames[@westFace]
+        B: faceNames[@backFace]
+    translateEnum[moveString]
+
+
 class Cube
   constructor: (other) ->
     if other?
@@ -55,6 +133,7 @@ class Cube
     @ep = state.ep.slice 0
     @cp = state.cp.slice 0
     @eo = state.eo.slice 0
+    @rotCube = state.rotCube
 
   identity: ->
     # Initialize to the identity cube
@@ -62,6 +141,7 @@ class Cube
     @co = (0 for x in [0..7])
     @ep = [0..11]
     @eo = (0 for x in [0..11])
+    @rotCube = new RotationCube()
 
   toJSON: ->
     cp: @cp
@@ -247,24 +327,10 @@ class Cube
     }
   ]
 
-  faceNums =
-    U: 0
-    R: 1
-    F: 2
-    D: 3
-    L: 4
-    B: 5
 
-  faceNames =
-    0: 'U'
-    1: 'R'
-    2: 'F'
-    3: 'D'
-    4: 'L'
-    5: 'B'
-
-  parseAlg = (arg) ->
+  parseAlg: (arg) ->
     if typeof arg is 'string'
+
       # String
       for part in arg.split(/\s+/)
         if part.length is 0
@@ -274,7 +340,15 @@ class Cube
         if part.length > 2
           throw new Error "Invalid move: #{part}"
 
-        move = faceNums[part[0]]
+        switch part
+          when "X" then @rotCube.x(); continue
+          when "X'" then @rotCube.xPrime(); continue
+          when "Y" then @rotCube.y(); continue
+          when "Y'" then @rotCube.yPrime(); continue
+          when "Z" then @rotCube.z(); continue
+          when "Z'" then @rotCube.zPrime(); continue
+
+        move = faceNums[@rotCube.translateMove(part[0])]
         if move is undefined
           throw new Error "Invalid move: #{part}"
 
@@ -299,7 +373,8 @@ class Cube
       [arg]
 
   move: (arg) ->
-    for move in parseAlg(arg)
+
+    for move in @parseAlg(arg)
       face = move / 3 | 0
       power = move % 3
       @multiply(Cube.moves[face]) for x in [0..power]
