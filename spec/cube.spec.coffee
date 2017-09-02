@@ -46,3 +46,8 @@ describe 'Cube', ->
   it 'should return inverse moves', ->
     moves = Cube.inverse "F B' R"
     expect(moves).toBe "R' B F'"
+
+  it 'should solve a solved cube :) ', ->
+    Cube.initSolver()
+    cube = new Cube
+    expect(cube.solve()).toBe "R L U2 R L F2 R2 U2 R2 F2 R2 U2 F2 L2"

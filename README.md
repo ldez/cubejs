@@ -16,19 +16,39 @@ A full-fledged random state scrambler demo is available [here](http://ldez.githu
 
 `cube.js` gives you basic cube manipulation:
 
+- Web:
+
 ```javascript
 // Create a new solved cube instance
-var cube = new Cube();
+const cube = new Cube();
 
 // Apply an algorithm or randomize the cube state
 cube.move("U F R2 B' D2 L'");
 cube.randomize();
 
 // Create a new random cube
-var randomCube = Cube.random();
+const randomCube = Cube.random();
+```
+
+- Node:
+
+```javascript
+const Cube = require('cubejs');
+
+// Create a new solved cube instance
+const cube = new Cube();
+
+// Apply an algorithm or randomize the cube state
+cube.move("U F R2 B' D2 L'");
+cube.randomize();
+
+// Create a new random cube
+const randomCube = Cube.random();
 ```
 
 Include `solve.js` to solve the cube.
+
+- Web:
 
 ```javascript
 // This takes 4-5 seconds on a modern computer
@@ -50,6 +70,21 @@ Cube.asyncInit('lib/worker.js', function() {
 });
 ```
 
+- Node:
+
+```javascript
+const Cube = require('cubejs');
+require('cubejs/lib/solve.js');
+
+// This takes 4-5 seconds on a modern computer
+Cube.initSolver();
+
+// These typically take from 0.01s to 0.4s, rarely up to 2s
+cube.solve();        // => "D2 B' R' B L' B ..."
+randomCube.solve();  // => "R B' R U' D' R' ..."
+```
+
+
 ## API Reference
 
 All functionality is implemented in the `Cube` object.
@@ -68,9 +103,9 @@ The constructor:
 - with an argument, clones another cube or cube state.
 
 ```javascript
-var cube = new Cube();
-var other = new Cube(cube);
-var third = new Cube(cube.toJSON());
+const cube = new Cube();
+const other = new Cube(cube);
+const third = new Cube(cube.toJSON());
 ```
 
 ##### `Cube.fromString(str)`
@@ -113,7 +148,7 @@ The following diagram demonstrates the order of the facelets:
 Return a new, randomized cube.
 
 ```javascript
-var cube = Cube.random();
+const cube = Cube.random();
 ```
 
 ##### `Cube.inverse(algoritm)`
@@ -135,8 +170,8 @@ See below for numeric moves.
 Resets the cube state to match another cube.
 
 ```javascript
-var random = Cube.random();
-var cube = new Cube();
+const random = Cube.random();
+const cube = new Cube();
 cube.init(random);
 ```
 
@@ -178,7 +213,7 @@ Returns `true` if the cube is solved (i.e. the identity cube), and `false` other
 Applies an algorithm (a string, array of moves, or a single move) to the cube.
 
 ```javascript
-var cube = new Cube();
+const cube = new Cube();
 cube.isSolved();  // => true
 cube.move("U R F'");
 cube.isSolved();  // => false
