@@ -5,13 +5,14 @@ describe 'Cube', ->
     expect(cube.asString()).toBe 'UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB'
 
   it 'should initiate a cube when provide a String', ->
-    cube = Cube.fromString 'UUUUUUUUUR...F...D...L...B...'
+    cube = Cube.fromString 'UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB'
     expect(cube.asString()).toBe 'UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB'
 
   it 'should serialize a cube to JSON for a default cube', ->
     cube = new Cube
 
     expectedJSON =
+      center: [0, 1, 2, 3, 4, 5],
       cp: [ 0, 1, 2, 3, 4, 5, 6, 7 ],
       co: [ 0, 0, 0, 0, 0, 0, 0, 0 ],
       ep: [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ],
@@ -28,6 +29,11 @@ describe 'Cube', ->
     cube = new Cube
     cube.move "U R F' L'"
     expect(cube.asString()).toBe 'DURRUFRRRBRBDRBDRBFDDDFFDFFBLLBDBLDLFUUFLLFLLULRUBUUBU'
+
+  it 'should rotate cuve face when apply a moves sequence includes additional notation', ->
+    cube = new Cube
+    cube.move "M' u2 z' S"
+    expect(cube.asString()).toBe 'LLRUFULLRDLDBLBDRDBBFUUDBBFRRLDBDRRLURUFRFULUBFFUDDBFF'
 
   it 'should resets the cube to the identity cube', ->
     cube = new Cube

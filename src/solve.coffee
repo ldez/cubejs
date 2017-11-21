@@ -1,5 +1,8 @@
 Cube = @Cube or require('./cube')
 
+# Centers
+[U, R, F, D, L, B] = [0..5]
+
 # Corners
 [URF, UFL, ULB, UBR, DFR, DLF, DBL, DRB] = [0..7]
 
@@ -474,7 +477,7 @@ Cube.initSolver = ->
   Cube.computeMoveTables()
   Cube.computePruningTables()
 
-Cube::solve = (maxDepth=22) ->
+Cube::solveUpright = (maxDepth=22) ->
   # Names for all moves, i.e. U, U2, U', F, F2, ...
   moveNames = do ->
     faceName = ['U', 'R', 'F', 'D', 'L', 'B']
@@ -668,6 +671,34 @@ Cube::solve = (maxDepth=22) ->
 
   solution
 
+faceNums =
+  U: 0
+  R: 1
+  F: 2
+  D: 3
+  L: 4
+  B: 5
+
+faceNames =
+  0: 'U'
+  1: 'R'
+  2: 'F'
+  3: 'D'
+  4: 'L'
+  5: 'B'
+
+Cube::solve = (maxDepth=22) ->
+  clone = @clone()
+  upright = clone.upright()
+  clone.move upright
+  rotation = new Cube().move(upright).center
+  uprightSolution = clone.solveUpright maxDepth
+  solution = []
+  for move in uprightSolution.split ' '
+    solution.push faceNames[rotation[faceNums[move[0]]]]
+    if move.length > 1
+      solution[solution.length - 1] += move[1]
+  solution.join ' '
 
 Cube.scramble = ->
   Cube.inverse(Cube.random().solve())
