@@ -1,13 +1,15 @@
 (function() {
-  var BL, BR, Cnk, Cube, DB, DBL, DF, DFR, DL, DLF, DR, DRB, FL, FR, Include, N_FLIP, N_FRtoBR, N_PARITY, N_SLICE1, N_SLICE2, N_TWIST, N_UBtoDF, N_URFtoDLF, N_URtoDF, N_URtoUL, UB, UBR, UF, UFL, UL, ULB, UR, URF, allMoves1, allMoves2, computeMoveTable, computePruningTable, factorial, key, max, mergeURtoDF, moveTableParams, nextMoves1, nextMoves2, permutationIndex, pruning, pruningTableParams, ref, ref1, rotateLeft, rotateRight, value,
+  var B, BL, BR, Cnk, Cube, D, DB, DBL, DF, DFR, DL, DLF, DR, DRB, F, FL, FR, Include, L, N_FLIP, N_FRtoBR, N_PARITY, N_SLICE1, N_SLICE2, N_TWIST, N_UBtoDF, N_URFtoDLF, N_URtoDF, N_URtoUL, R, U, UB, UBR, UF, UFL, UL, ULB, UR, URF, allMoves1, allMoves2, computeMoveTable, computePruningTable, faceNames, faceNums, factorial, key, max, mergeURtoDF, moveTableParams, nextMoves1, nextMoves2, permutationIndex, pruning, pruningTableParams, ref, ref1, ref2, rotateLeft, rotateRight, value,
     slice1 = [].slice,
     indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   Cube = this.Cube || require('./cube');
 
-  ref = [0, 1, 2, 3, 4, 5, 6, 7], URF = ref[0], UFL = ref[1], ULB = ref[2], UBR = ref[3], DFR = ref[4], DLF = ref[5], DBL = ref[6], DRB = ref[7];
+  ref = [0, 1, 2, 3, 4, 5], U = ref[0], R = ref[1], F = ref[2], D = ref[3], L = ref[4], B = ref[5];
 
-  ref1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], UR = ref1[0], UF = ref1[1], UL = ref1[2], UB = ref1[3], DR = ref1[4], DF = ref1[5], DL = ref1[6], DB = ref1[7], FR = ref1[8], FL = ref1[9], BL = ref1[10], BR = ref1[11];
+  ref1 = [0, 1, 2, 3, 4, 5, 6, 7], URF = ref1[0], UFL = ref1[1], ULB = ref1[2], UBR = ref1[3], DFR = ref1[4], DLF = ref1[5], DBL = ref1[6], DRB = ref1[7];
+
+  ref2 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], UR = ref2[0], UF = ref2[1], UL = ref2[2], UB = ref2[3], DR = ref2[4], DF = ref2[5], DL = ref2[6], DB = ref2[7], FR = ref2[8], FL = ref2[9], BL = ref2[10], BR = ref2[11];
 
   Cnk = function(n, k) {
     var i, j, s;
@@ -30,9 +32,9 @@
   };
 
   factorial = function(n) {
-    var f, i, m, ref2;
+    var f, i, m, ref3;
     f = 1;
-    for (i = m = 2, ref2 = n; 2 <= ref2 ? m <= ref2 : m >= ref2; i = 2 <= ref2 ? ++m : --m) {
+    for (i = m = 2, ref3 = n; 2 <= ref3 ? m <= ref3 : m >= ref3; i = 2 <= ref3 ? ++m : --m) {
       f *= i;
     }
     return f;
@@ -47,18 +49,18 @@
   };
 
   rotateLeft = function(array, l, r) {
-    var i, m, ref2, ref3, tmp;
+    var i, m, ref3, ref4, tmp;
     tmp = array[l];
-    for (i = m = ref2 = l, ref3 = r - 1; ref2 <= ref3 ? m <= ref3 : m >= ref3; i = ref2 <= ref3 ? ++m : --m) {
+    for (i = m = ref3 = l, ref4 = r - 1; ref3 <= ref4 ? m <= ref4 : m >= ref4; i = ref3 <= ref4 ? ++m : --m) {
       array[i] = array[i + 1];
     }
     return array[r] = tmp;
   };
 
   rotateRight = function(array, l, r) {
-    var i, m, ref2, ref3, tmp;
+    var i, m, ref3, ref4, tmp;
     tmp = array[r];
-    for (i = m = ref2 = r, ref3 = l + 1; ref2 <= ref3 ? m <= ref3 : m >= ref3; i = ref2 <= ref3 ? ++m : --m) {
+    for (i = m = ref3 = r, ref4 = l + 1; ref3 <= ref4 ? m <= ref4 : m >= ref4; i = ref3 <= ref4 ? ++m : --m) {
       array[i] = array[i - 1];
     }
     return array[l] = tmp;
@@ -79,26 +81,26 @@
       permName = 'ep';
     }
     our = (function() {
-      var m, ref2, results;
+      var m, ref3, results;
       results = [];
-      for (i = m = 0, ref2 = maxOur; 0 <= ref2 ? m <= ref2 : m >= ref2; i = 0 <= ref2 ? ++m : --m) {
+      for (i = m = 0, ref3 = maxOur; 0 <= ref3 ? m <= ref3 : m >= ref3; i = 0 <= ref3 ? ++m : --m) {
         results.push(0);
       }
       return results;
     })();
     return function(index) {
-      var a, b, c, j, k, m, o, p, perm, q, ref10, ref11, ref12, ref2, ref3, ref4, ref5, ref6, ref7, ref8, ref9, t, u, w, x, y, z;
+      var a, b, c, j, k, m, o, p, perm, q, ref10, ref11, ref12, ref13, ref3, ref4, ref5, ref6, ref7, ref8, ref9, t, u, w, x, y, z;
       if (index != null) {
-        for (i = m = 0, ref2 = maxOur; 0 <= ref2 ? m <= ref2 : m >= ref2; i = 0 <= ref2 ? ++m : --m) {
+        for (i = m = 0, ref3 = maxOur; 0 <= ref3 ? m <= ref3 : m >= ref3; i = 0 <= ref3 ? ++m : --m) {
           our[i] = i + start;
         }
         b = index % maxB;
         a = index / maxB | 0;
         perm = this[permName];
-        for (i = o = 0, ref3 = maxAll; 0 <= ref3 ? o <= ref3 : o >= ref3; i = 0 <= ref3 ? ++o : --o) {
+        for (i = o = 0, ref4 = maxAll; 0 <= ref4 ? o <= ref4 : o >= ref4; i = 0 <= ref4 ? ++o : --o) {
           perm[i] = -1;
         }
-        for (j = p = 1, ref4 = maxOur; 1 <= ref4 ? p <= ref4 : p >= ref4; j = 1 <= ref4 ? ++p : --p) {
+        for (j = p = 1, ref5 = maxOur; 1 <= ref5 ? p <= ref5 : p >= ref5; j = 1 <= ref5 ? ++p : --p) {
           k = b % (j + 1);
           b = b / (j + 1) | 0;
           while (k > 0) {
@@ -108,7 +110,7 @@
         }
         x = maxOur;
         if (fromEnd) {
-          for (j = q = 0, ref5 = maxAll; 0 <= ref5 ? q <= ref5 : q >= ref5; j = 0 <= ref5 ? ++q : --q) {
+          for (j = q = 0, ref6 = maxAll; 0 <= ref6 ? q <= ref6 : q >= ref6; j = 0 <= ref6 ? ++q : --q) {
             c = Cnk(maxAll - j, x + 1);
             if (a - c >= 0) {
               perm[j] = our[maxOur - x];
@@ -117,7 +119,7 @@
             }
           }
         } else {
-          for (j = t = ref6 = maxAll; ref6 <= 0 ? t <= 0 : t >= 0; j = ref6 <= 0 ? ++t : --t) {
+          for (j = t = ref7 = maxAll; ref7 <= 0 ? t <= 0 : t >= 0; j = ref7 <= 0 ? ++t : --t) {
             c = Cnk(j, x + 1);
             if (a - c >= 0) {
               perm[j] = our[x];
@@ -129,28 +131,28 @@
         return this;
       } else {
         perm = this[permName];
-        for (i = u = 0, ref7 = maxOur; 0 <= ref7 ? u <= ref7 : u >= ref7; i = 0 <= ref7 ? ++u : --u) {
+        for (i = u = 0, ref8 = maxOur; 0 <= ref8 ? u <= ref8 : u >= ref8; i = 0 <= ref8 ? ++u : --u) {
           our[i] = -1;
         }
         a = b = x = 0;
         if (fromEnd) {
-          for (j = w = ref8 = maxAll; ref8 <= 0 ? w <= 0 : w >= 0; j = ref8 <= 0 ? ++w : --w) {
-            if ((start <= (ref9 = perm[j]) && ref9 <= end)) {
+          for (j = w = ref9 = maxAll; ref9 <= 0 ? w <= 0 : w >= 0; j = ref9 <= 0 ? ++w : --w) {
+            if ((start <= (ref10 = perm[j]) && ref10 <= end)) {
               a += Cnk(maxAll - j, x + 1);
               our[maxOur - x] = perm[j];
               x++;
             }
           }
         } else {
-          for (j = y = 0, ref10 = maxAll; 0 <= ref10 ? y <= ref10 : y >= ref10; j = 0 <= ref10 ? ++y : --y) {
-            if ((start <= (ref11 = perm[j]) && ref11 <= end)) {
+          for (j = y = 0, ref11 = maxAll; 0 <= ref11 ? y <= ref11 : y >= ref11; j = 0 <= ref11 ? ++y : --y) {
+            if ((start <= (ref12 = perm[j]) && ref12 <= end)) {
               a += Cnk(j, x + 1);
               our[x] = perm[j];
               x++;
             }
           }
         }
-        for (j = z = ref12 = maxOur; ref12 <= 0 ? z <= 0 : z >= 0; j = ref12 <= 0 ? ++z : --z) {
+        for (j = z = ref13 = maxOur; ref13 <= 0 ? z <= 0 : z >= 0; j = ref13 <= 0 ? ++z : --z) {
           k = 0;
           while (our[j] !== start + j) {
             rotateLeft(our, 0, j);
@@ -205,10 +207,10 @@
       }
     },
     cornerParity: function() {
-      var i, j, m, o, ref2, ref3, ref4, ref5, s;
+      var i, j, m, o, ref3, ref4, ref5, ref6, s;
       s = 0;
-      for (i = m = ref2 = DRB, ref3 = URF + 1; ref2 <= ref3 ? m <= ref3 : m >= ref3; i = ref2 <= ref3 ? ++m : --m) {
-        for (j = o = ref4 = i - 1, ref5 = URF; ref4 <= ref5 ? o <= ref5 : o >= ref5; j = ref4 <= ref5 ? ++o : --o) {
+      for (i = m = ref3 = DRB, ref4 = URF + 1; ref3 <= ref4 ? m <= ref4 : m >= ref4; i = ref3 <= ref4 ? ++m : --m) {
+        for (j = o = ref5 = i - 1, ref6 = URF; ref5 <= ref6 ? o <= ref6 : o >= ref6; j = ref5 <= ref6 ? ++o : --o) {
           if (this.cp[j] > this.cp[i]) {
             s++;
           }
@@ -217,10 +219,10 @@
       return s % 2;
     },
     edgeParity: function() {
-      var i, j, m, o, ref2, ref3, ref4, ref5, s;
+      var i, j, m, o, ref3, ref4, ref5, ref6, s;
       s = 0;
-      for (i = m = ref2 = BR, ref3 = UR + 1; ref2 <= ref3 ? m <= ref3 : m >= ref3; i = ref2 <= ref3 ? ++m : --m) {
-        for (j = o = ref4 = i - 1, ref5 = UR; ref4 <= ref5 ? o <= ref5 : o >= ref5; j = ref4 <= ref5 ? ++o : --o) {
+      for (i = m = ref3 = BR, ref4 = UR + 1; ref3 <= ref4 ? m <= ref4 : m >= ref4; i = ref3 <= ref4 ? ++m : --m) {
+        for (j = o = ref5 = i - 1, ref6 = UR; ref5 <= ref6 ? o <= ref6 : o >= ref6; j = ref5 <= ref6 ? ++o : --o) {
           if (this.ep[j] > this.ep[i]) {
             s++;
           }
@@ -241,11 +243,11 @@
   }
 
   computeMoveTable = function(context, coord, size) {
-    var apply, cube, i, inner, j, k, m, move, o, p, ref2, results;
+    var apply, cube, i, inner, j, k, m, move, o, p, ref3, results;
     apply = context === 'corners' ? 'cornerMultiply' : 'edgeMultiply';
     cube = new Cube;
     results = [];
-    for (i = m = 0, ref2 = size - 1; 0 <= ref2 ? m <= ref2 : m >= ref2; i = 0 <= ref2 ? ++m : --m) {
+    for (i = m = 0, ref3 = size - 1; 0 <= ref3 ? m <= ref3 : m >= ref3; i = 0 <= ref3 ? ++m : --m) {
       cube[coord](i);
       inner = [];
       for (j = o = 0; o <= 5; j = ++o) {
@@ -326,7 +328,7 @@
   };
 
   Cube.computeMoveTables = function() {
-    var len, m, name, ref2, scope, size, tableName, tables;
+    var len, m, name, ref3, scope, size, tableName, tables;
     tables = 1 <= arguments.length ? slice1.call(arguments, 0) : [];
     if (tables.length === 0) {
       tables = (function() {
@@ -360,7 +362,7 @@
           return results;
         })();
       } else {
-        ref2 = moveTableParams[tableName], scope = ref2[0], size = ref2[1];
+        ref3 = moveTableParams[tableName], scope = ref3[0], size = ref3[1];
         this.moveTables[tableName] = computeMoveTable(scope, tableName, size);
       }
     }
@@ -423,11 +425,11 @@
   };
 
   computePruningTable = function(phase, size, currentCoords, nextIndex) {
-    var current, depth, done, index, len, m, move, moves, next, o, ref2, table, x;
+    var current, depth, done, index, len, m, move, moves, next, o, ref3, table, x;
     table = (function() {
-      var m, ref2, results;
+      var m, ref3, results;
       results = [];
-      for (x = m = 0, ref2 = Math.ceil(size / 8) - 1; 0 <= ref2 ? m <= ref2 : m >= ref2; x = 0 <= ref2 ? ++m : --m) {
+      for (x = m = 0, ref3 = Math.ceil(size / 8) - 1; 0 <= ref3 ? m <= ref3 : m >= ref3; x = 0 <= ref3 ? ++m : --m) {
         results.push(0xFFFFFFFF);
       }
       return results;
@@ -441,7 +443,7 @@
     pruning(table, 0, depth);
     done = 1;
     while (done !== size) {
-      for (index = m = 0, ref2 = size - 1; 0 <= ref2 ? m <= ref2 : m >= ref2; index = 0 <= ref2 ? ++m : --m) {
+      for (index = m = 0, ref3 = size - 1; 0 <= ref3 ? m <= ref3 : m >= ref3; index = 0 <= ref3 ? ++m : --m) {
         if (!(pruning(table, index) === depth)) {
           continue;
         }
@@ -545,7 +547,7 @@
     return Cube.computePruningTables();
   };
 
-  Cube.prototype.solve = function(maxDepth) {
+  Cube.prototype.solveUpright = function(maxDepth) {
     var State, freeStates, moveNames, phase1, phase1search, phase2, phase2search, solution, state, x;
     if (maxDepth == null) {
       maxDepth = 22;
@@ -680,10 +682,10 @@
     })();
     solution = null;
     phase1search = function(state) {
-      var depth, m, ref2, results;
+      var depth, m, ref3, results;
       depth = 0;
       results = [];
-      for (depth = m = 1, ref2 = maxDepth; 1 <= ref2 ? m <= ref2 : m >= ref2; depth = 1 <= ref2 ? ++m : --m) {
+      for (depth = m = 1, ref3 = maxDepth; 1 <= ref3 ? m <= ref3 : m >= ref3; depth = 1 <= ref3 ? ++m : --m) {
         phase1(state, depth);
         if (solution !== null) {
           break;
@@ -693,19 +695,19 @@
       return results;
     };
     phase1 = function(state, depth) {
-      var len, m, move, next, ref2, ref3, results;
+      var len, m, move, next, ref3, ref4, results;
       if (depth === 0) {
         if (state.minDist1() === 0) {
-          if (state.lastMove === null || (ref2 = state.lastMove, indexOf.call(allMoves2, ref2) < 0)) {
+          if (state.lastMove === null || (ref3 = state.lastMove, indexOf.call(allMoves2, ref3) < 0)) {
             return phase2search(state);
           }
         }
       } else if (depth > 0) {
         if (state.minDist1() <= depth) {
-          ref3 = state.moves1();
+          ref4 = state.moves1();
           results = [];
-          for (m = 0, len = ref3.length; m < len; m++) {
-            move = ref3[m];
+          for (m = 0, len = ref4.length; m < len; m++) {
+            move = ref4[m];
             next = state.next1(move);
             phase1(next, depth - 1);
             freeStates.push(next);
@@ -720,10 +722,10 @@
       }
     };
     phase2search = function(state) {
-      var depth, m, ref2, results;
+      var depth, m, ref3, results;
       state.init2();
       results = [];
-      for (depth = m = 1, ref2 = maxDepth - state.depth; 1 <= ref2 ? m <= ref2 : m >= ref2; depth = 1 <= ref2 ? ++m : --m) {
+      for (depth = m = 1, ref3 = maxDepth - state.depth; 1 <= ref3 ? m <= ref3 : m >= ref3; depth = 1 <= ref3 ? ++m : --m) {
         phase2(state, depth);
         if (solution !== null) {
           break;
@@ -733,17 +735,17 @@
       return results;
     };
     phase2 = function(state, depth) {
-      var len, m, move, next, ref2, results;
+      var len, m, move, next, ref3, results;
       if (depth === 0) {
         if (state.minDist2() === 0) {
           return solution = state.solution();
         }
       } else if (depth > 0) {
         if (state.minDist2() <= depth) {
-          ref2 = state.moves2();
+          ref3 = state.moves2();
           results = [];
-          for (m = 0, len = ref2.length; m < len; m++) {
-            move = ref2[m];
+          for (m = 0, len = ref3.length; m < len; m++) {
+            move = ref3[m];
             next = state.next2(move);
             phase2(next, depth - 1);
             freeStates.push(next);
@@ -758,9 +760,9 @@
       }
     };
     freeStates = (function() {
-      var m, ref2, results;
+      var m, ref3, results;
       results = [];
-      for (x = m = 0, ref2 = maxDepth + 1; 0 <= ref2 ? m <= ref2 : m >= ref2; x = 0 <= ref2 ? ++m : --m) {
+      for (x = m = 0, ref3 = maxDepth + 1; 0 <= ref3 ? m <= ref3 : m >= ref3; x = 0 <= ref3 ? ++m : --m) {
         results.push(new State);
       }
       return results;
@@ -772,6 +774,46 @@
       solution = solution.substring(0, solution.length - 1);
     }
     return solution;
+  };
+
+  faceNums = {
+    U: 0,
+    R: 1,
+    F: 2,
+    D: 3,
+    L: 4,
+    B: 5
+  };
+
+  faceNames = {
+    0: 'U',
+    1: 'R',
+    2: 'F',
+    3: 'D',
+    4: 'L',
+    5: 'B'
+  };
+
+  Cube.prototype.solve = function(maxDepth) {
+    var clone, len, m, move, ref3, rotation, solution, upright, uprightSolution;
+    if (maxDepth == null) {
+      maxDepth = 22;
+    }
+    clone = this.clone();
+    upright = clone.upright();
+    clone.move(upright);
+    rotation = new Cube().move(upright).center;
+    uprightSolution = clone.solveUpright(maxDepth);
+    solution = [];
+    ref3 = uprightSolution.split(' ');
+    for (m = 0, len = ref3.length; m < len; m++) {
+      move = ref3[m];
+      solution.push(faceNames[rotation[faceNums[move[0]]]]);
+      if (move.length > 1) {
+        solution[solution.length - 1] += move[1];
+      }
+    }
+    return solution.join(' ');
   };
 
   Cube.scramble = function() {
