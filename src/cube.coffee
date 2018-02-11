@@ -1,31 +1,38 @@
+# Centers
+[U, R, F, D, L, B] = [0..5]
+
 # Corners
 [URF, UFL, ULB, UBR, DFR, DLF, DBL, DRB] = [0..7]
 
 # Edges
 [UR, UF, UL, UB, DR, DF, DL, DB, FR, FL, BL, BR] = [0..11]
 
-[cornerFacelet, edgeFacelet] = do ->
-  U = (x) -> x - 1
-  R = (x) -> U(9) + x
-  F = (x) -> R(9) + x
-  D = (x) -> F(9) + x
-  L = (x) -> D(9) + x
-  B = (x) -> L(9) + x
+[centerFacelet, cornerFacelet, edgeFacelet] = do ->
+  _U = (x) -> x - 1
+  _R = (x) -> _U(9) + x
+  _F = (x) -> _R(9) + x
+  _D = (x) -> _F(9) + x
+  _L = (x) -> _D(9) + x
+  _B = (x) -> _L(9) + x
   [
+    # Centers
+    [4, 13, 22, 31, 40, 49],
     # Corners
     [
-      [U(9), R(1), F(3)], [U(7), F(1), L(3)],
-      [U(1), L(1), B(3)], [U(3), B(1), R(3)],
-      [D(3), F(9), R(7)], [D(1), L(9), F(7)],
-      [D(7), B(9), L(7)], [D(9), R(9), B(7)],
+      [_U(9), _R(1), _F(3)], [_U(7), _F(1), _L(3)],
+      [_U(1), _L(1), _B(3)], [_U(3), _B(1), _R(3)],
+      [_D(3), _F(9), _R(7)], [_D(1), _L(9), _F(7)],
+      [_D(7), _B(9), _L(7)], [_D(9), _R(9), _B(7)],
     ],
     # Edges
     [
-      [U(6), R(2)], [U(8), F(2)], [U(4), L(2)], [U(2), B(2)],
-      [D(6), R(8)], [D(2), F(8)], [D(4), L(8)], [D(8), B(8)],
-      [F(6), R(4)], [F(4), L(6)], [B(6), L(4)], [B(4), R(6)],
+      [_U(6), _R(2)], [_U(8), _F(2)], [_U(4), _L(2)], [_U(2), _B(2)],
+      [_D(6), _R(8)], [_D(2), _F(8)], [_D(4), _L(8)], [_D(8), _B(8)],
+      [_F(6), _R(4)], [_F(4), _L(6)], [_B(6), _L(4)], [_B(4), _R(6)],
     ],
   ]
+
+centerColor = ['U', 'R', 'F', 'D', 'L', 'B']
 
 cornerColor = [
   ['U', 'R', 'F'], ['U', 'F', 'L'], ['U', 'L', 'B'], ['U', 'B', 'R'],
@@ -45,12 +52,14 @@ class Cube
       @identity()
 
     # For moves to avoid allocating new objects each time
+    @newCenter = (0 for x in [0..5])
     @newCp = (0 for x in [0..7])
     @newEp = (0 for x in [0..11])
     @newCo = (0 for x in [0..7])
     @newEo = (0 for x in [0..11])
 
   init: (state) ->
+    @center = state.center.slice 0
     @co = state.co.slice 0
     @ep = state.ep.slice 0
     @cp = state.cp.slice 0
@@ -58,12 +67,14 @@ class Cube
 
   identity: ->
     # Initialize to the identity cube
+    @center = [0..5]
     @cp = [0..7]
     @co = (0 for x in [0..7])
     @ep = [0..11]
     @eo = (0 for x in [0..11])
 
   toJSON: ->
+    center: @center
     cp: @cp
     co: @co
     ep: @ep
@@ -72,9 +83,8 @@ class Cube
   asString: ->
     result = []
 
-    # Initialize centers
-    for [i, c] in [[4, 'U'], [13, 'R'], [22, 'F'], [31, 'D'], [40, 'L'], [49, 'B']]
-      result[i] = c
+    for i in [0..5]
+      result[9 * i + 4] = centerColor[@center[i]]
 
     for i in [0..7]
       corner = @cp[i]
@@ -92,6 +102,11 @@ class Cube
 
   @fromString: (str) ->
     cube = new Cube
+
+    for i in [0..5]
+      for j in [0..5]
+        if str[9 * i + 4] is centerColor[j]
+          cube.center[i] = j
 
     for i in [0..7]
       for ori in [0..2]
@@ -159,15 +174,30 @@ class Cube
     new Cube().randomize()
 
   isSolved: ->
+    clone = @clone()
+    clone.move clone.upright()
+
+    for cent in [0..5]
+      return false if clone.center[cent] isnt cent
+
     for c in [0..7]
-      return false if @cp[c] isnt c
-      return false if @co[c] isnt 0
+      return false if clone.cp[c] isnt c
+      return false if clone.co[c] isnt 0
 
     for e in [0..11]
-      return false if @ep[e] isnt e
-      return false if @eo[e] isnt 0
+      return false if clone.ep[e] isnt e
+      return false if clone.eo[e] isnt 0
 
     true
+
+  # Multiply this Cube with another Cube, restricted to centers.
+  centerMultiply: (other) ->
+    for to in [0..5]
+      from = other.center[to]
+      @newCenter[to] = @center[from]
+    
+    [@center, @newCenter] = [@newCenter, @center]
+    this
 
   # Multiply this Cube with another Cube, restricted to corners.
   cornerMultiply: (other) ->
@@ -193,6 +223,7 @@ class Cube
 
   # Multiply this cube with another Cube
   multiply: (other) ->
+    @centerMultiply(other)
     @cornerMultiply(other)
     @edgeMultiply(other)
     this
@@ -200,6 +231,7 @@ class Cube
   @moves: [
     # U
     {
+      center: [0..5]
       cp: [UBR, URF, UFL, ULB, DFR, DLF, DBL, DRB]
       co: [0, 0, 0, 0, 0, 0, 0, 0]
       ep: [UB, UR, UF, UL, DR, DF, DL, DB, FR, FL, BL, BR]
@@ -208,6 +240,7 @@ class Cube
 
     # R
     {
+      center: [0..5]
       cp: [DFR, UFL, ULB, URF, DRB, DLF, DBL, UBR]
       co: [2, 0, 0, 1, 1, 0, 0, 2]
       ep: [FR, UF, UL, UB, BR, DF, DL, DB, DR, FL, BL, UR]
@@ -216,6 +249,7 @@ class Cube
 
     # F
     {
+      center: [0..5]
       cp: [UFL, DLF, ULB, UBR, URF, DFR, DBL, DRB]
       co: [1, 2, 0, 0, 2, 1, 0, 0]
       ep: [UR, FL, UL, UB, DR, FR, DL, DB, UF, DF, BL, BR]
@@ -224,6 +258,7 @@ class Cube
 
     # D
     {
+      center: [0..5]
       cp: [URF, UFL, ULB, UBR, DLF, DBL, DRB, DFR]
       co: [0, 0, 0, 0, 0, 0, 0, 0]
       ep: [UR, UF, UL, UB, DF, DL, DB, DR, FR, FL, BL, BR]
@@ -232,6 +267,7 @@ class Cube
 
     # L
     {
+      center: [0..5]
       cp: [URF, ULB, DBL, UBR, DFR, UFL, DLF, DRB]
       co: [0, 1, 2, 0, 0, 2, 1, 0]
       ep: [UR, UF, BL, UB, DR, DF, FL, DB, FR, UL, DL, BR]
@@ -240,10 +276,38 @@ class Cube
 
     # B
     {
+      center: [0..5]
       cp: [URF, UFL, UBR, DRB, DFR, DLF, ULB, DBL]
       co: [0, 0, 1, 2, 0, 0, 2, 1]
       ep: [UR, UF, UL, BR, DR, DF, DL, BL, FR, FL, UB, DB]
       eo: [0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1]
+    }
+
+    # E
+    {
+      center: [U, F, L, D, B, R]
+      cp: [URF, UFL, ULB, UBR, DFR, DLF, DBL, DRB]
+      co: [0, 0, 0, 0, 0, 0, 0, 0]
+      ep: [UR, UF, UL, UB, DR, DF, DL, DB, FL, BL, BR, FR]
+      eo: [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1]
+    }
+
+    # M
+    {
+      center: [B, R, U, F, L, D]
+      cp: [URF, UFL, ULB, UBR, DFR, DLF, DBL, DRB]
+      co: [0, 0, 0, 0, 0, 0, 0, 0]
+      ep: [UR, UB, UL, DB, DR, UF, DL, DF, FR, FL, BL, BR]
+      eo: [0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0]
+    }
+
+    # S
+    {
+      center: [L, U, F, R, D, B]
+      cp: [URF, UFL, ULB, UBR, DFR, DLF, DBL, DRB]
+      co: [0, 0, 0, 0, 0, 0, 0, 0]
+      ep: [UL, UF, DL, UB, UR, DF, DR, DB, FR, FL, BL, BR]
+      eo: [1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0]
     }
   ]
 
@@ -254,6 +318,18 @@ class Cube
     D: 3
     L: 4
     B: 5
+    E: 6
+    M: 7
+    S: 8
+    x: 9
+    y: 10
+    z: 11
+    u: 12
+    r: 13
+    f: 14
+    d: 15
+    l: 16
+    b: 17
 
   faceNames =
     0: 'U'
@@ -262,6 +338,18 @@ class Cube
     3: 'D'
     4: 'L'
     5: 'B'
+    6: 'E'
+    7: 'M'
+    8: 'S'
+    9: 'x'
+    10: 'y'
+    11: 'z'
+    12: 'u'
+    13: 'r'
+    14: 'f'
+    15: 'd'
+    16: 'l'
+    17: 'b'
 
   parseAlg = (arg) ->
     if typeof arg is 'string'
@@ -306,6 +394,26 @@ class Cube
 
     this
 
+  upright: ->
+    clone = @clone()
+    result = []
+    for i in [0..5]
+      break if clone.center[i] is F
+    switch i
+      when D then result.push "x"
+      when U then result.push "x'"
+      when B then result.push "x2"
+      when R then result.push "y"
+      when L then result.push "y'"
+    if result.length then clone.move result[0]
+    for j in [0..5]
+      break if clone.center[j] is U
+    switch j
+      when L then result.push "z"
+      when R then result.push "z'"
+      when D then result.push "z2"
+    result.join ' '
+
   @inverse: (arg) ->
     result = for move in parseAlg(arg)
       face = move / 3 | 0
@@ -333,6 +441,32 @@ class Cube
     else
       result[0]
 
+  # x
+  Cube.moves.push new Cube().move("R M' L'").toJSON()
+
+  # y
+  Cube.moves.push new Cube().move("U E' D'").toJSON()
+
+  # z
+  Cube.moves.push new Cube().move("F S B'").toJSON()
+
+  # u
+  Cube.moves.push new Cube().move("U E'").toJSON()
+
+  # r
+  Cube.moves.push new Cube().move("R M'").toJSON()
+
+  # f
+  Cube.moves.push new Cube().move("F S").toJSON()
+
+  # d
+  Cube.moves.push new Cube().move("D E").toJSON()
+
+  # l
+  Cube.moves.push new Cube().move("L M").toJSON()
+
+  # b
+  Cube.moves.push new Cube().move("B S'").toJSON()
 
 ## Globals
 
