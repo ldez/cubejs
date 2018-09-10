@@ -46,7 +46,7 @@ cube.randomize();
 const randomCube = Cube.random();
 ```
 
-Include `solve.js` to solve the cube.
+From `solve.js` you can use the methods below, to solve the cube using [Herbert Kociemba's two-phase algorithm](http://kociemba.org/cube.htm).
 
 - Web:
 
@@ -74,7 +74,6 @@ Cube.asyncInit('lib/worker.js', function() {
 
 ```javascript
 const Cube = require('cubejs');
-require('cubejs/lib/solve.js');
 
 // This takes 4-5 seconds on a modern computer
 Cube.initSolver();
