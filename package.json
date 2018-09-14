@@ -27,7 +27,7 @@
     "scrambler",
     "solver"
   ],
-  "main": "lib/cube.js",
+  "main": "index.js",
   "scripts": {
     "build": "gulp",
     "test": "gulp test",
