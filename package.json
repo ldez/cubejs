@@ -49,5 +49,8 @@
     "karma-jasmine": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.2",
     "phantomjs": "^2.1.7"
+  },
+  "dependencies": {
+    "npm": "^6.0.0"
   }
 }
