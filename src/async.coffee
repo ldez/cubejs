@@ -6,7 +6,7 @@ Extend =
   _asyncSetup: (workerURI) ->
     return if @_worker
     @_worker = new window.Worker(workerURI)
-    @_worker.addEventListener('message', => @_asyncEvent(arguments...))
+    @_worker.addEventListener('message', (e) => @_asyncEvent(e))
     @_asyncCallbacks = {}
 
   _asyncEvent: (e) ->
