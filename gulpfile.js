@@ -1,7 +1,7 @@
 const path = require('path');
 const del = require('del');
 const gulp = require('gulp');
-const gutil = require('gulp-util');
+const log = require('fancy-log');
 const coffeelint = require('gulp-coffeelint');
 const coffee = require('gulp-coffee');
 const karma = require('karma');
@@ -17,21 +17,20 @@ function clean() {
 }
 
 function buildCoffee(dest) {
-  gulp.src(`./${paths.src}/*.coffee`)
+  return gulp.src(`./${paths.src}/*.coffee`)
     .pipe(coffeelint())
     .pipe(coffeelint.reporter())
     .pipe(coffee({
       bare: false
-    }).on('error', gutil.log))
+    }).on('error', log))
     .pipe(gulp.dest(dest));
 }
 
 function build() {
-  buildCoffee(`./${paths.dist}/`);
+  return buildCoffee(`./${paths.dist}/`);
 }
 
 function runTests(singleRun, done) {
-
   const localConfig = {
     configFile: path.join(__dirname, './karma.conf.coffee'),
     singleRun: singleRun,
@@ -49,7 +48,7 @@ function cleanDemo() {
 }
 
 function demo() {
-  buildCoffee(`./${paths.demo}/lib/`);
+  return buildCoffee(`./${paths.demo}/lib/`);
 }
 
 gulp.task('test', function(done) {
@@ -62,7 +61,7 @@ gulp.task('test:auto', function(done) {
 
 gulp.task('build', build);
 gulp.task('clean', clean);
-gulp.task('default', ['clean', 'build']);
+gulp.task('default', gulp.series(clean, build));
 
 gulp.task('demo:clean', cleanDemo);
-gulp.task('demo:build', ['demo:clean'], demo);
+gulp.task('demo:build', gulp.series(cleanDemo, demo));
