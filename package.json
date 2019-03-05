@@ -44,7 +44,7 @@
     "gulp-coffee": "^3.0.2",
     "gulp-coffeelint": "^0.6.0",
     "jasmine-core": "^3.2.1",
-    "karma": "^3.0.0",
+    "karma": "^4.0.1",
     "karma-coffee-preprocessor": "^1.0.1",
     "karma-jasmine": "^2.0.1",
     "karma-phantomjs-launcher": "^1.0.4",
