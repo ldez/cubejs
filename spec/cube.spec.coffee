@@ -45,7 +45,7 @@ describe 'Cube', ->
     cube = new Cube
     expect(cube.isSolved()).toBe true
 
-  it 'should return false when the cube is not solved (random cube)', ->
+  it 'should return false when the cube is not solved (random cube), and runs without errors in normal time', ->
     cube = Cube.random()
     expect(cube.isSolved()).toBe false
 
