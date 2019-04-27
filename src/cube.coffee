@@ -146,14 +146,14 @@ class Cube
       currentIndex = array.length
 
       # While there remain elements to shuffle...
-      while (currentIndex != 0)
+      while currentIndex isnt 0
 
         # Pick a remaining element...
-        randomIndex = randint(0, currentIndex - 1);
-        currentIndex -= 1;
+        randomIndex = randint(0, currentIndex - 1)
+        currentIndex -= 1
 
         # And swap it with the current element.
-        temporaryValue = array[currentIndex];
+        temporaryValue = array[currentIndex]
         [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
 
 
@@ -161,13 +161,13 @@ class Cube
       numSwaps = 0
       seen = (false for x in [0..arr.length - 1])
       # We compute the cycle decomposition
-      while(1)
+      loop
         cur = -1
         for i in [0..arr.length - 1]
           if not seen[i]
             cur = i
             break
-        if cur == -1
+        if cur is -1
           break
         cycleLength = 0
         while not seen[cur]
@@ -178,18 +178,18 @@ class Cube
         numSwaps += cycleLength + 1
       return numSwaps
 
-    arePermutationsValid = () ->
-      numSwaps = getNumSwaps(@ep) + getNumSwaps(@cp)
-      return numSwaps % 2 == 0
+    arePermutationsValid = (cp, ep) ->
+      numSwaps = getNumSwaps(ep) + getNumSwaps(cp)
+      return numSwaps % 2 is 0
 
-    generateValidRandomPermutation = () ->
+    generateValidRandomPermutation = (cp, ep) ->
       # Each shuffle only takes around 12 operations and there's a 50%
       # chance of a valid permutation so it'll finish in very good time
-      shuffle(@ep)
-      shuffle(@cp)
-      while not arePermutationsValid()
-        shuffle(@ep)
-        shuffle(@cp)
+      shuffle(ep)
+      shuffle(cp)
+      until arePermutationsValid(cp, ep)
+        shuffle(ep)
+        shuffle(cp)
 
     randomizeOrientation = (arr, numOrientations) ->
       ori = 0
@@ -197,24 +197,26 @@ class Cube
         ori += (arr[i] = randint(0, numOrientations - 1))
 
     isOrientationValid = (arr, numOrientations) ->
-      return arr.reduce((a, b) -> a + b) % numOrientations == 0
+      return arr.reduce((a, b) -> a + b) % numOrientations is 0
 
-    generateValidRandomOrientation = () ->
+    generateValidRandomOrientation = (co, eo) ->
       # There is a 1/2 and 1/3 probably respectively of each of these
       # succeeding so the probability of them running 10 times before
       # success is already only 1% and only gets exponentially lower
       # and each generation is only in the 10s of operations which is nothing
-      randomizeOrientation(@co, 3)
-      while (not isOrientationValid(@co, 3)) randomizeOrientation(@co, 3)
+      randomizeOrientation(co, 3)
+      until isOrientationValid(co, 3)
+        randomizeOrientation(co, 3)
 
-      randomizeOrientation(@eo, 2)
-      while (not isOrientationValid(@eo, 2)) randomizeOrientation(@eo, 2)
+      randomizeOrientation(eo, 2)
+      until isOrientationValid(eo, 2)
+        randomizeOrientation(eo, 2)
 
 
 
     result = ->
-      generateValidRandomPermutation()
-      generateValidRandomOrientation()
+      generateValidRandomPermutation(@cp, @ep)
+      generateValidRandomOrientation(@co, @eo)
       return this
 
     result
@@ -245,7 +247,7 @@ class Cube
     for to in [0..5]
       from = other.center[to]
       @newCenter[to] = @center[from]
-    
+
     [@center, @newCenter] = [@newCenter, @center]
     this
 
