@@ -217,7 +217,7 @@
       }
 
       static fromString(str) {
-        var col1, col2, cube, i, j, k, l, m, o, ori, p, q, ref, s;
+        var col1, col2, cube, i, j, k, l, m, o, ori, p, q, r, ref;
         cube = new Cube;
         for (i = k = 0; k <= 5; i = ++k) {
           for (j = l = 0; l <= 5; j = ++l) {
@@ -242,7 +242,7 @@
           }
         }
         for (i = q = 0; q <= 11; i = ++q) {
-          for (j = s = 0; s <= 11; j = ++s) {
+          for (j = r = 0; r <= 11; j = ++r) {
             if (str[edgeFacelet[i][0]] === edgeColor[j][0] && str[edgeFacelet[i][1]] === edgeColor[j][1]) {
               cube.ep[i] = j;
               cube.eo[i] = 0;
@@ -440,41 +440,102 @@
     };
 
     Cube.prototype.randomize = (function() {
-      var mixPerm, randOri, randint, result;
+      var arePermutationsValid, generateValidRandomOrientation, generateValidRandomPermutation, getNumSwaps, isOrientationValid, randint, randomizeOrientation, result, shuffle;
       randint = function(min, max) {
-        return min + (Math.random() * (max - min + 1) | 0);
+        return min + Math.floor(Math.random() * (max - min + 1));
       };
-      mixPerm = function(arr) {
-        var i, k, max, r, ref, results;
-        max = arr.length - 1;
-        results = [];
-        for (i = k = 0, ref = max - 2; (0 <= ref ? k <= ref : k >= ref); i = 0 <= ref ? ++k : --k) {
-          r = randint(i, max);
-          // Ensure an even number of swaps
-          if (i !== r) {
-            [arr[i], arr[r]] = [arr[r], arr[i]];
-            results.push([arr[max], arr[max - 1]] = [arr[max - 1], arr[max]]);
-          } else {
-            results.push(void 0);
-          }
+      // Fisher-Yates shuffle adapted from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+      shuffle = function(array) {
+        var currentIndex, randomIndex, temporaryValue;
+        currentIndex = array.length;
+        // While there remain elements to shuffle...
+        while (currentIndex !== 0) {
+          // Pick a remaining element...
+          randomIndex = randint(0, currentIndex - 1);
+          currentIndex -= 1;
+          // And swap it with the current element.
+          temporaryValue = array[currentIndex];
+          [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
         }
-        return results;
       };
-      randOri = function(arr, max) {
+      getNumSwaps = function(arr) {
+        var cur, cycleLength, i, k, numSwaps, ref, seen, x;
+        numSwaps = 0;
+        seen = (function() {
+          var k, ref, results;
+          results = [];
+          for (x = k = 0, ref = arr.length - 1; (0 <= ref ? k <= ref : k >= ref); x = 0 <= ref ? ++k : --k) {
+            results.push(false);
+          }
+          return results;
+        })();
+        while (true) {
+          // We compute the cycle decomposition
+          cur = -1;
+          for (i = k = 0, ref = arr.length - 1; (0 <= ref ? k <= ref : k >= ref); i = 0 <= ref ? ++k : --k) {
+            if (!seen[i]) {
+              cur = i;
+              break;
+            }
+          }
+          if (cur === -1) {
+            break;
+          }
+          cycleLength = 0;
+          while (!seen[cur]) {
+            seen[cur] = true;
+            cycleLength++;
+            cur = arr[cur];
+          }
+          // A cycle is equivalent to cycleLength + 1 swaps
+          numSwaps += cycleLength + 1;
+        }
+        return numSwaps;
+      };
+      arePermutationsValid = function(cp, ep) {
+        var numSwaps;
+        numSwaps = getNumSwaps(ep) + getNumSwaps(cp);
+        return numSwaps % 2 === 0;
+      };
+      generateValidRandomPermutation = function(cp, ep) {
+        // Each shuffle only takes around 12 operations and there's a 50%
+        // chance of a valid permutation so it'll finish in very good time
+        shuffle(ep);
+        shuffle(cp);
+        while (!arePermutationsValid(cp, ep)) {
+          shuffle(ep);
+          shuffle(cp);
+        }
+      };
+      randomizeOrientation = function(arr, numOrientations) {
         var i, k, ori, ref;
         ori = 0;
-        for (i = k = 0, ref = arr.length - 2; (0 <= ref ? k <= ref : k >= ref); i = 0 <= ref ? ++k : --k) {
-          ori += (arr[i] = randint(0, max - 1));
+        for (i = k = 0, ref = arr.length - 1; (0 <= ref ? k <= ref : k >= ref); i = 0 <= ref ? ++k : --k) {
+          ori += (arr[i] = randint(0, numOrientations - 1));
         }
-        // Set the orientation of the last cubie so that the cube is
-        // valid
-        return arr[arr.length - 1] = (max - ori % max) % max;
+      };
+      isOrientationValid = function(arr, numOrientations) {
+        return arr.reduce(function(a, b) {
+          return a + b;
+        }) % numOrientations === 0;
+      };
+      generateValidRandomOrientation = function(co, eo) {
+        // There is a 1/2 and 1/3 probably respectively of each of these
+        // succeeding so the probability of them running 10 times before
+        // success is already only 1% and only gets exponentially lower
+        // and each generation is only in the 10s of operations which is nothing
+        randomizeOrientation(co, 3);
+        while (!isOrientationValid(co, 3)) {
+          randomizeOrientation(co, 3);
+        }
+        randomizeOrientation(eo, 2);
+        while (!isOrientationValid(eo, 2)) {
+          randomizeOrientation(eo, 2);
+        }
       };
       result = function() {
-        mixPerm(this.cp);
-        mixPerm(this.ep);
-        randOri(this.co, 3);
-        randOri(this.eo, 2);
+        generateValidRandomPermutation(this.cp, this.ep);
+        generateValidRandomOrientation(this.co, this.eo);
         return this;
       };
       return result;
