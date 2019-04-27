@@ -139,7 +139,7 @@ class Cube
 
   randomize: do ->
     randint = (min, max) ->
-      min + Math.floor(Math.random() * (max - min + 1) )
+      return min + Math.floor(Math.random() * (max - min + 1) )
 
     # Fisher-Yates shuffle adapted from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
     shuffle = (array) ->
@@ -147,7 +147,6 @@ class Cube
 
       # While there remain elements to shuffle...
       while currentIndex isnt 0
-
         # Pick a remaining element...
         randomIndex = randint(0, currentIndex - 1)
         currentIndex -= 1
@@ -155,6 +154,7 @@ class Cube
         # And swap it with the current element.
         temporaryValue = array[currentIndex]
         [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
+      return
 
 
     getNumSwaps = (arr) ->
@@ -190,11 +190,13 @@ class Cube
       until arePermutationsValid(cp, ep)
         shuffle(ep)
         shuffle(cp)
+      return
 
     randomizeOrientation = (arr, numOrientations) ->
       ori = 0
       for i in [0..arr.length - 1]
         ori += (arr[i] = randint(0, numOrientations - 1))
+      return
 
     isOrientationValid = (arr, numOrientations) ->
       return arr.reduce((a, b) -> a + b) % numOrientations is 0
@@ -211,6 +213,7 @@ class Cube
       randomizeOrientation(eo, 2)
       until isOrientationValid(eo, 2)
         randomizeOrientation(eo, 2)
+      return
 
 
 
@@ -219,7 +222,7 @@ class Cube
       generateValidRandomOrientation(@co, @eo)
       return this
 
-    result
+    return result
 
   # A class method returning a new random cube
   @random: ->
