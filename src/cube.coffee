@@ -139,32 +139,85 @@ class Cube
 
   randomize: do ->
     randint = (min, max) ->
-      min + (Math.random() * (max - min + 1) | 0)
+      min + Math.floor(Math.random() * (max - min + 1) )
 
-    mixPerm = (arr) ->
-      max = arr.length - 1
-      for i in [0..max - 2]
-        r = randint(i, max)
+    # Fisher-Yates shuffle adapted from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+    shuffle = (array) ->
+      currentIndex = array.length
 
-        # Ensure an even number of swaps
-        if i isnt r
-          [arr[i], arr[r]] = [arr[r], arr[i]]
-          [arr[max], arr[max - 1]] = [arr[max - 1], arr[max]]
+      # While there remain elements to shuffle...
+      while currentIndex isnt 0
+        # Pick a remaining element...
+        randomIndex = randint(0, currentIndex - 1)
+        currentIndex -= 1
 
-    randOri = (arr, max) ->
+        # And swap it with the current element.
+        temporaryValue = array[currentIndex]
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
+      return
+
+    getNumSwaps = (arr) ->
+      numSwaps = 0
+      seen = (false for x in [0..arr.length - 1])
+      # We compute the cycle decomposition
+      loop
+        cur = -1
+        for i in [0..arr.length - 1]
+          if not seen[i]
+            cur = i
+            break
+        if cur is -1
+          break
+        cycleLength = 0
+        while not seen[cur]
+          seen[cur] = true
+          cycleLength++
+          cur = arr[cur]
+        # A cycle is equivalent to cycleLength + 1 swaps
+        numSwaps += cycleLength + 1
+      numSwaps
+
+    arePermutationsValid = (cp, ep) ->
+      numSwaps = getNumSwaps(ep) + getNumSwaps(cp)
+      numSwaps % 2 is 0
+
+    generateValidRandomPermutation = (cp, ep) ->
+      # Each shuffle only takes around 12 operations and there's a 50%
+      # chance of a valid permutation so it'll finish in very good time
+      shuffle(ep)
+      shuffle(cp)
+      until arePermutationsValid(cp, ep)
+        shuffle(ep)
+        shuffle(cp)
+      return
+
+    randomizeOrientation = (arr, numOrientations) ->
       ori = 0
-      for i in [0..arr.length - 2]
-        ori += (arr[i] = randint(0, max - 1))
+      for i in [0..arr.length - 1]
+        ori += (arr[i] = randint(0, numOrientations - 1))
+      return
 
-      # Set the orientation of the last cubie so that the cube is
-      # valid
-      arr[arr.length - 1] = (max - ori % max) % max
+    isOrientationValid = (arr, numOrientations) ->
+      arr.reduce((a, b) -> a + b) % numOrientations is 0
+
+    generateValidRandomOrientation = (co, eo) ->
+      # There is a 1/2 and 1/3 probably respectively of each of these
+      # succeeding so the probability of them running 10 times before
+      # success is already only 1% and only gets exponentially lower
+      # and each generation is only in the 10s of operations which is nothing
+      randomizeOrientation(co, 3)
+      until isOrientationValid(co, 3)
+        randomizeOrientation(co, 3)
+
+      randomizeOrientation(eo, 2)
+      until isOrientationValid(eo, 2)
+        randomizeOrientation(eo, 2)
+
+      return
 
     result = ->
-      mixPerm(@cp)
-      mixPerm(@ep)
-      randOri(@co, 3)
-      randOri(@eo, 2)
+      generateValidRandomPermutation(@cp, @ep)
+      generateValidRandomOrientation(@co, @eo)
       this
 
     result
@@ -195,7 +248,7 @@ class Cube
     for to in [0..5]
       from = other.center[to]
       @newCenter[to] = @center[from]
-    
+
     [@center, @newCenter] = [@newCenter, @center]
     this
 
