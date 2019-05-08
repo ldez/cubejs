@@ -35,14 +35,9 @@ Extend =
     @_asyncCallback('solve', (data) -> callback(Cube.inverse(data.algorithm)))
     @_worker.postMessage(cmd: 'solve', cube: Cube.random().toJSON())
 
-
-Include =
   asyncSolve: (callback) ->
     Cube._asyncSolve(this, callback)
 
 
 for key, value of Extend
   Cube[key] = value
-
-for key, value of Include
-  Cube::[key] = value
