@@ -53,8 +53,24 @@ describe 'Cube', ->
     moves = Cube.inverse "F B' R"
     expect(moves).toBe "R' B F'"
 
-  # ignore because Travis is slow
-  xit 'should solve a solved cube :) ', ->
+  # It seems Cube init state is reset between tests so we keep it all in one
+  # Due to Travis being slow we skip this but if you change algorithm you should
+  # run it locally
+  xit 'should solve cubes', ->
     Cube.initSolver()
+    # Should solve empty cube
     cube = new Cube
-    expect(cube.solve()).toBe "R L U2 R L F2 R2 U2 R2 F2 R2 U2 F2 L2"
+    expect(cube.solve()).toBe ""
+
+    # Should solve trivial cube efficiently
+    cube.move("U'")
+    expect(cube.solve()).toBe "U"
+
+    # Should solve random cube
+    cube = Cube.random()
+    # Should not be solved initially
+    expect(cube.isSolved()).toBeFalse
+    solution = cube.solve()
+    cube.move(solution)
+    # Solution should have solved the cube
+    expect(cube.isSolved()).toBeTrue
