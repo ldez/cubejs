@@ -616,11 +616,9 @@ Cube::solveUpright = (maxDepth=22) ->
   solution = null
 
   phase1search = (state) ->
-    depth = 0
     for depth in [1..maxDepth]
       phase1(state, depth)
       break if solution isnt null
-      depth++
 
   phase1 = (state, depth) ->
     if depth is 0
@@ -646,7 +644,6 @@ Cube::solveUpright = (maxDepth=22) ->
     for depth in [1..maxDepth - state.depth]
       phase2(state, depth)
       break if solution isnt null
-      depth++
 
   phase2 = (state, depth) ->
     if depth is 0
@@ -665,11 +662,8 @@ Cube::solveUpright = (maxDepth=22) ->
   phase1search(state)
   freeStates.push(state)
 
-  # Trim the trailing space
-  if solution.length > 0
-    solution = solution.substring(0, solution.length - 1)
-
-  solution
+  # Trim the trailing space and return
+  solution.trim()
 
 faceNums =
   U: 0
