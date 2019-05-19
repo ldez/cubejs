@@ -619,6 +619,7 @@ Cube::solveUpright = (maxDepth=22) ->
   solution = null
 
   phase1search = (state) ->
+
     for depth in [0..maxDepth]
       phase1(state, depth)
       break if solution isnt null
