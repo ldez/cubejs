@@ -1,5 +1,5 @@
 (function() {
-  var Cube, Extend, Include, key, value;
+  var Cube, Extend, key, value;
 
   Cube = this.Cube || require('./cube');
 
@@ -58,10 +58,7 @@
         cmd: 'solve',
         cube: Cube.random().toJSON()
       });
-    }
-  };
-
-  Include = {
+    },
     asyncSolve: function(callback) {
       return Cube._asyncSolve(this, callback);
     }
@@ -70,11 +67,6 @@
   for (key in Extend) {
     value = Extend[key];
     Cube[key] = value;
-  }
-
-  for (key in Include) {
-    value = Include[key];
-    Cube.prototype[key] = value;
   }
 
 }).call(this);

@@ -285,7 +285,7 @@
     // state in each iteration. Then apply each of the 18 moves to the
     // cube, and compute the resulting coordinate.
     apply = context === 'corners' ? 'cornerMultiply' : 'edgeMultiply';
-    cube = new Cube;
+    cube = new Cube();
     results = [];
     for (i = m = 0, ref = size - 1; (0 <= ref ? m <= ref : m >= ref); i = 0 <= ref ? ++m : --m) {
       cube[coord](i);
@@ -309,8 +309,8 @@
   // of phase 2.
   mergeURtoDF = (function() {
     var a, b;
-    a = new Cube;
-    b = new Cube;
+    a = new Cube();
+    b = new Cube();
     return function(URtoUL, UBtoDF) {
       var i, m;
       // Collisions can be found because unset are set to -1
@@ -376,7 +376,7 @@
     URtoDF: ['edges', N_URtoDF],
     URtoUL: ['edges', N_URtoUL],
     UBtoDF: ['edges', N_UBtoDF],
-    mergeURtoDF: []
+    mergeURtoDF: [] // handled specially
   };
 
   Cube.computeMoveTables = function(...tables) {
@@ -719,7 +719,7 @@
 
       //# Phase 1
 
-      // Return the next valid phase 1 moves for this state
+        // Return the next valid phase 1 moves for this state
       moves1() {
         if (this.lastMove !== null) {
           return nextMoves1[this.lastMove / 3 | 0];
@@ -755,7 +755,7 @@
 
       //# Phase 2
 
-      // Return the next valid phase 2 moves for this state
+        // Return the next valid phase 2 moves for this state
       moves2() {
         if (this.lastMove !== null) {
           return nextMoves2[this.lastMove / 3 | 0];
@@ -813,14 +813,14 @@
     solution = null;
     phase1search = function(state) {
       var depth, m, ref, results;
-      depth = 0;
       results = [];
       for (depth = m = 1, ref = maxDepth; (1 <= ref ? m <= ref : m >= ref); depth = 1 <= ref ? ++m : --m) {
         phase1(state, depth);
         if (solution !== null) {
           break;
+        } else {
+          results.push(void 0);
         }
-        results.push(depth++);
       }
       return results;
     };
@@ -863,8 +863,9 @@
         phase2(state, depth);
         if (solution !== null) {
           break;
+        } else {
+          results.push(void 0);
         }
-        results.push(depth++);
       }
       return results;
     };
@@ -897,18 +898,15 @@
       var m, ref, results;
       results = [];
       for (x = m = 0, ref = maxDepth + 1; (0 <= ref ? m <= ref : m >= ref); x = 0 <= ref ? ++m : --m) {
-        results.push(new State);
+        results.push(new State());
       }
       return results;
     })();
     state = freeStates.pop().init(this);
     phase1search(state);
     freeStates.push(state);
-    // Trim the trailing space
-    if (solution.length > 0) {
-      solution = solution.substring(0, solution.length - 1);
-    }
-    return solution;
+    // Trim the trailing space and return
+    return solution.trim();
   };
 
   faceNums = {

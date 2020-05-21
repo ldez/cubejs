@@ -218,7 +218,7 @@
 
       static fromString(str) {
         var col1, col2, cube, i, j, k, l, m, o, ori, p, q, r, ref;
-        cube = new Cube;
+        cube = new Cube();
         for (i = k = 0; k <= 5; i = ++k) {
           for (j = l = 0; l <= 5; j = ++l) {
             if (str[9 * i + 4] === centerColor[j]) {

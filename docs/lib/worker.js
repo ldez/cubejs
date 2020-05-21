@@ -19,7 +19,7 @@
       return;
     }
     if (args.scramble) {
-      cube = new Cube;
+      cube = new Cube();
       cube.move(args.scramble);
     } else if (args.cube) {
       cube = new Cube(args.cube);
