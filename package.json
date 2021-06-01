@@ -51,6 +51,6 @@
     "phantomjs-prebuilt": "^2.1.16"
   },
   "dependencies": {
-    "npm": "^6.0.0"
+    "npm": "^7.15.1"
   }
 }
