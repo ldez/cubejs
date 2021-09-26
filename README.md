@@ -157,7 +157,7 @@ Given an algorithm (a string, array of moves, or a single move), returns its inv
 ```javascript
 Cube.inverse("F B' R");    // => "R' B F'"
 Cube.inverse([1, 8, 12]);  // => [14, 6, 1]
-Cube.inverse(8);           // => 8
+Cube.inverse(8);           // => 6
 ```
 
 See below for numeric moves.
@@ -230,21 +230,21 @@ Internally, cube.js treats moves as numbers.
 | U    | 0      |
 | U2   | 1      |
 | U'   | 2      |
-| F    | 3      |
-| F2   | 4      |
-| F'   | 5      |
-| L    | 6      |
-| L2   | 7      |
-| L'   | 8      |
+| R    | 3      |
+| R2   | 4      |
+| R'   | 5      |
+| F    | 6      |
+| F2   | 7      |
+| F'   | 8      |
 | D    | 9      |
 | D2   | 10     |
 | D'   | 11     |
-| B    | 12     |
-| B2   | 13     |
-| B'   | 14     |
-| R    | 15     |
-| R2   | 16     |
-| R'   | 17     |
+| L    | 12     |
+| L2   | 13     |
+| L'   | 14     |
+| B    | 15     |
+| B2   | 16     |
+| B'   | 17     |
 
 ### `solve.js`
 
