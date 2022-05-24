@@ -31,7 +31,7 @@
     // Generate a scramble
     Cube.asyncScramble(function(alg) {
       let safeAlgo = alg.replace(/\s+/g, ''); // remove spaces
-      let url = `http://cube.crider.co.uk/visualcube.php?fmt=svg&size=150&pzl=3&alg=${safeAlgo}`;
+      let url = `http://cube.rider.biz/visualcube.php?fmt=svg&size=150&pzl=3&alg=${safeAlgo}`;
       $('#randomstate .result').html(`${alg}<br><img src=\"${url}\">`);
     });
   }

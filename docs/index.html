@@ -32,7 +32,7 @@
       This is a simple random state scrambler created with <a href="https://github.com/ldez/cubejs">cube.js</a>. After the initialization is complete, click on the "generate random scramble" button to generate a random-state scramble.
     </p>
     <p>
-      Graphics are generated using Conrad Rider's <a href="http://cube.crider.co.uk/visualcube.php">VisualCube</a>.
+      Graphics are generated using Conrad Rider's <a href="http://cube.rider.biz/visualcube.php">VisualCube</a>.
     </p>
     <p>
       The demo scrambler and its code are presented below. Click <a href="demo.html">here</a> for a standalone page.
@@ -106,7 +106,7 @@
             <span class="c1">// Generate a scramble</span>
             <span class="nx">Cube</span><span class="p">.</span><span class="nx">asyncScramble</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">alg</span><span class="p">)</span> <span class="p">{</span>
                 <span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="nx">alg</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\s+/g</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>  <span class="c1">// remove spaces</span>
-                    <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;http://cube.crider.co.uk/visualcube.png?size=150&amp;alg=&quot;</span> <span class="o">+</span> <span class="nx">s</span><span class="p">;</span>
+                    <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;http://cube.rider.biz/visualcube.png?size=150&amp;alg=&quot;</span> <span class="o">+</span> <span class="nx">s</span><span class="p">;</span>
                 <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#randomstate .result&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">alg</span> <span class="o">+</span> <span class="s2">&quot;&lt;br&gt;&lt;img src=\&quot;&quot;</span> <span class="o">+</span> <span class="nx">url</span> <span class="o">+</span> <span class="s2">&quot;\&quot;&gt;&quot;</span><span class="p">);</span>
             <span class="p">});</span>
         <span class="p">};</span>
