@@ -579,19 +579,22 @@ Cube::solveUpright = (maxDepth=22) ->
 
     # Initialize phase 2 coordinates
     init2: (top=true) ->
-      if @parent is null
+      if @parent is null and not top
         # Already assigned for the initial state
         return
 
-      # For other states, the phase 2 state is computed based on
-      # parent's state.
-      @parent.init2(false)
+      # If parent is null then this is the initial call which must mean
+      # the cube started in phase 2 so there is no need for this
+      if @parent isnt null
+        # For other states, the phase 2 state is computed based on
+        # parent's state.
+        @parent.init2(false, false)
 
-      @URFtoDLF = @move('URFtoDLF', @parent.URFtoDLF, @lastMove)
-      @FRtoBR = @move('FRtoBR', @parent.FRtoBR, @lastMove)
-      @parity = @move('parity', @parent.parity, @lastMove)
-      @URtoUL = @move('URtoUL', @parent.URtoUL, @lastMove)
-      @UBtoDF = @move('UBtoDF', @parent.UBtoDF, @lastMove)
+        @URFtoDLF = @move('URFtoDLF', @parent.URFtoDLF, @lastMove)
+        @FRtoBR = @move('FRtoBR', @parent.FRtoBR, @lastMove)
+        @parity = @move('parity', @parent.parity, @lastMove)
+        @URtoUL = @move('URtoUL', @parent.URtoUL, @lastMove)
+        @UBtoDF = @move('UBtoDF', @parent.UBtoDF, @lastMove)
 
       if top
         # This is the initial phase 2 state. Get the URtoDF coordinate
@@ -616,7 +619,8 @@ Cube::solveUpright = (maxDepth=22) ->
   solution = null
 
   phase1search = (state) ->
-    for depth in [1..maxDepth]
+
+    for depth in [0..maxDepth]
       phase1(state, depth)
       break if solution isnt null
 
@@ -641,7 +645,7 @@ Cube::solveUpright = (maxDepth=22) ->
     # Initialize phase 2 coordinates
     state.init2()
 
-    for depth in [1..maxDepth - state.depth]
+    for depth in [0..maxDepth - state.depth]
       phase2(state, depth)
       break if solution isnt null
 
