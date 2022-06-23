@@ -58,3 +58,9 @@ describe 'Cube', ->
     Cube.initSolver()
     cube = new Cube
     expect(cube.solve()).toBe "R L U2 R L F2 R2 U2 R2 F2 R2 U2 F2 L2"
+
+  # ignore because Travis is slow
+  xit 'should return null if no solution is found (maxDepth too low)', ->
+    Cube.initSolver()
+    cube = Cube.random()
+    expect(cube.solve(1)).toBe null

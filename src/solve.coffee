@@ -662,6 +662,7 @@ Cube::solveUpright = (maxDepth=22) ->
   phase1search(state)
   freeStates.push(state)
 
+  return null if not solution?
   # Trim the trailing space and return
   solution.trim()
 
@@ -687,6 +688,7 @@ Cube::solve = (maxDepth=22) ->
   clone.move upright
   rotation = new Cube().move(upright).center
   uprightSolution = clone.solveUpright maxDepth
+  return null if not uprightSolution?
   solution = []
   for move in uprightSolution.split ' '
     solution.push faceNames[rotation[faceNums[move[0]]]]
